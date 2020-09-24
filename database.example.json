@@ -1,0 +1,10 @@
+{
+    "dev": {
+        "driver": "pg",
+        "user": "thanks_bot_2",
+        "password": "thanks_bot_2",
+        "host": "localhost",
+        "database": "thanks_bot_2"
+    },
+    "sql-file": true
+}

@@ -1,0 +1,4 @@
+node_modules
+postgres.json
+yarn-error.log
+database.json

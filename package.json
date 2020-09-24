@@ -1,0 +1,31 @@
+{
+  "name": "thanks_bot_2",
+  "version": "1.0.0",
+  "description": "the second version of thanks_bot. Now in Typescript",
+  "main": "index.js",
+  "author": "Lenscas",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "nodemon",
+    "build": "rimraf ./build && ./bin/tsc",
+    "start": "npm run build && node build/index.js",
+    "prepareSql": "npx pgtyped -c postgres.json",
+    "migrate": "./node_modules/.bin/db-migrate"
+  },
+  "dependencies": {
+    "@pgtyped/query": "^0.8.2",
+    "@types/node": "^14.11.2",
+    "discord.js": "^12.3.1",
+    "pg": "^8.3.3"
+  },
+  "devDependencies": {
+    "@pgtyped/cli": "^0.8.2",
+    "@types/pg": "^7.14.5",
+    "db-migrate": "^0.11.11",
+    "db-migrate-pg": "^1.2.2",
+    "nodemon": "^2.0.4",
+    "rimraf": "^3.0.2",
+    "ts-node": "^9.0.0",
+    "typescript": "^3.1"
+  }
+}

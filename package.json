@@ -1,31 +1,43 @@
 {
-  "name": "thanks_bot_2",
+  "name": "harsh-bot",
   "version": "1.0.0",
-  "description": "the second version of thanks_bot. Now in Typescript",
+  "description": "",
   "main": "index.js",
-  "author": "Lenscas",
-  "license": "MIT",
-  "scripts": {
-    "start:dev": "nodemon",
-    "build": "rimraf ./build && ./bin/tsc",
-    "start": "npm run build && node build/index.js",
-    "prepareSql": "npx pgtyped -c postgres.json",
-    "migrate": "./node_modules/.bin/db-migrate"
-  },
   "dependencies": {
-    "@pgtyped/query": "^0.8.2",
-    "@types/node": "^14.11.2",
+    "@ipmanlk/madura-api": "^1.1.0",
+    "@vitalets/google-translate-api": "^4.0.0",
+    "binding": "^3.0.3",
+    "bindings": "^1.5.0",
+    "covidapi": "^0.5.0",
+    "dictionary-en": "^3.0.1",
+    "discord-anti-spam": "^2.4.1",
+    "discord-jokes": "^1.0.12",
     "discord.js": "^12.3.1",
-    "pg": "^8.3.3"
+    "fs": "0.0.1-security",
+    "moment": "^2.28.0",
+    "mongoose": "^5.10.6",
+    "ms": "^2.1.2",
+    "owlbot-js": "^2.0.0",
+    "pastebin": "0.0.1",
+    "pastemyst-js": "^1.0.5",
+    "quadkey": "0.0.1",
+    "quick-db": "^1.0.5",
+    "snekfetch": "^4.0.4",
+    "spamnya": "^1.1.1",
+    "sqlite3": "^5.0.0",
+    "superagent": "^6.1.0",
+    "trello": "^0.10.0",
+    "urban": "^0.3.2",
+    "weather-js": "^2.0.0"
   },
-  "devDependencies": {
-    "@pgtyped/cli": "^0.8.2",
-    "@types/pg": "^7.14.5",
-    "db-migrate": "^0.11.11",
-    "db-migrate-pg": "^1.2.2",
-    "nodemon": "^2.0.4",
-    "rimraf": "^3.0.2",
-    "ts-node": "^9.0.0",
-    "typescript": "^3.1"
-  }
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Discord",
+    "Bot"
+  ],
+  "author": "Harsh Singh",
+  "license": "MIT"
 }

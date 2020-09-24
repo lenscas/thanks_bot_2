@@ -4,9 +4,9 @@ This is a simple discord bot to keep track of helpfull people so mods can reward
 
 # Dependencies
 
-- Node (v14.10.0)
-- Yarn (npm install yarn -g)
-- Postgresql
+-   Node (v14.10.0)
+-   Yarn (npm install yarn -g)
+-   Postgresql
 
 # Setup
 
@@ -21,8 +21,10 @@ Congrats, you can now run the bot.
 
 # Usefull scripts
 
-1. `prepareSql` reads the sql files and updates the generated types (use -w to run in watch mode)
-2. `start:dev` automatically recompiles and restarts on changes
-3. `build` does a clean build
-4. `start` does a clean build, then starts the bot
-5. `migrate` to run [db-migrate](https://db-migrate.readthedocs.io/en/latest/Getting%20Started/usage/)
+1. `lintFix` uses eslint to fix most lint errors (PR's with lint errors won't get merged)
+2. `prepareSql` reads the sql files and updates the generated types (use -w to run in watch mode)
+3. `start:dev` automatically recompiles and restarts on changes
+4. `build` does a clean build
+5. `start` does a clean build, then starts the bot
+6. `migrate` to run [db-migrate](https://db-migrate.readthedocs.io/en/latest/Getting%20Started/usage/)
+7. `lint` runs eslint and tells you what the problems are.

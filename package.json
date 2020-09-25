@@ -15,7 +15,9 @@
     "lintFix": "./node_modules/.bin/eslint '*/**/*.{js,ts}' --fix",
     "lint": "./node_modules/.bin/eslint '**/*.{js,ts}' --fix",
     "unitTest": "mocha -r ts-node/register test/**/*.spec.ts",
-    "test": "yarn lint && yarn unitTest"
+    "test": "yarn lint && yarn unitTest",
+    "typedoc": "typedoc --mode modules --includeDeclarations",
+    "typedocOpen": "yarn typedoc && firefox ./docs/index.html"
   },
   "dependencies": {
     "@pgtyped/query": "^0.8.2",
@@ -43,6 +45,7 @@
     "sinon": "^9.0.3",
     "ts-mock-imports": "^1.3.0",
     "ts-node": "^9.0.0",
+    "typedoc": "^0.19.2",
     "typescript": "^3.1"
   }
 }

@@ -3,3 +3,5 @@ postgres.json
 yarn-error.log
 database.json
 docs
+build
+config.json

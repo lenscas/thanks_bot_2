@@ -1,4 +1,4 @@
-import { Pool, PoolClient } from 'pg';
+import { Pool, PoolClient, PoolConfig } from 'pg';
 
 export class ClientWrapper {
     onTransactionError: 'rollback' | 'commit' = 'rollback';
@@ -31,6 +31,9 @@ export class ClientWrapper {
 }
 
 export class PoolWrapper extends Pool {
+    constructor(config: PoolConfig) {
+        super(config);
+    }
     getCon = async <T>(func: (client: ClientWrapper) => Promise<T>): Promise<T> => {
         const connection = await this.connect();
         const wrapper = new ClientWrapper(connection);

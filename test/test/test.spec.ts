@@ -1,3 +1,4 @@
+/*
 import { ImportMock } from 'ts-mock-imports';
 import * as queries from '../../src/test/test.queries';
 import { test } from '../../src/test/test';
@@ -30,3 +31,4 @@ describe('Check the test function', () => {
         ImportMock.restore();
     });
 });
+*/

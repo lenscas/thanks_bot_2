@@ -15,7 +15,7 @@
     "lintFix": "./node_modules/.bin/eslint '*/**/*.{js,ts}' --fix",
     "lint": "./node_modules/.bin/eslint '**/*.{js,ts}' --fix",
     "unitTest": "mocha -r ts-node/register test/**/*.spec.ts",
-    "test": "yarn lint && yarn unit-test"
+    "test": "yarn lint && yarn unitTest"
   },
   "dependencies": {
     "@pgtyped/query": "^0.8.2",

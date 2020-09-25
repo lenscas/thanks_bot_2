@@ -22,9 +22,11 @@ Congrats, you can now run the bot.
 # Usefull scripts
 
 1. `lintFix` uses eslint to fix most lint errors (PR's with lint errors won't get merged)
-2. `prepareSql` reads the sql files and updates the generated types (use -w to run in watch mode)
-3. `start:dev` automatically recompiles and restarts on changes
-4. `build` does a clean build
-5. `start` does a clean build, then starts the bot
-6. `migrate` to run [db-migrate](https://db-migrate.readthedocs.io/en/latest/Getting%20Started/usage/)
-7. `lint` runs eslint and tells you what the problems are.
+2. `unitTest` runs the unit tests
+3. `prepareSql` reads the sql files and updates the generated types (use -w to run in watch mode)
+4. `start:dev` automatically recompiles and restarts on changes
+5. `build` does a clean build
+6. `start` does a clean build, then starts the bot
+7. `migrate` to run [db-migrate](https://db-migrate.readthedocs.io/en/latest/Getting%20Started/usage/)
+8. `lint` runs eslint and tells you what the problems are.
+9. `test` runs the linter and the unit tests

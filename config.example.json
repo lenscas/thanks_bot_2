@@ -1,0 +1,5 @@
+{
+    "discordToken": "YOUR_TOKEN_HERE",
+    "commandPrefix": "~",
+    "cooldown": 5
+}

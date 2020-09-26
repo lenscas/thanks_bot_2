@@ -1,0 +1,9 @@
+import { create_command } from '../../command';
+
+export const command = create_command(async ({ message }) => {
+    await message.channel.send([
+        'My code is at <https://github.com/lenscas/thanks_bot_2>',
+        'Bugs reports and feature requests can be asked at: <https://github.com/lenscas/thanks_bot_2/issues>',
+        'Thanks for showing interest in my code and have a nice day :)',
+    ]);
+}, 'Puts some links in the chat related to the code of thanks_bot');

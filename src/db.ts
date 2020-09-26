@@ -12,6 +12,14 @@ export class ClientWrapper {
             this.client = client;
         }
     }
+    query = (
+        query: string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        bindings: any[],
+    ): Promise<{
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        rows: any[];
+    }> => this.client.query(query, bindings);
 
     newLayer = (): ClientWrapper => new ClientWrapper(this);
 
@@ -44,7 +52,7 @@ export class PoolWrapper extends Pool {
             connection.release();
         }
     };
-    prepare = async <T>(func: (client: ClientWrapper) => Promise<T>): Promise<T> => {
+    startTransaction = async <T>(func: (client: ClientWrapper) => Promise<T>): Promise<T> => {
         return this.getCon((v) => v.startTransaction(func));
     };
 }

@@ -114,7 +114,10 @@ export function find_something(command: string, tree: CommandTree): Command | Co
         } else if (candidate.group == command) {
             return candidate;
         } else {
-            return find_command(command, candidate);
+            const result = find_something(command, candidate);
+            if (result) {
+                return result;
+            }
         }
     }
 }

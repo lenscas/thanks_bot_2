@@ -2859,6 +2859,11 @@ typedoc@^0.19.2:
     shelljs "^0.8.4"
     typedoc-default-themes "^0.11.4"
 
+typescript-pattern-matching@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/typescript-pattern-matching/-/typescript-pattern-matching-1.0.1.tgz#c7f839cfe42d130b3ad719a9b253206975d7fc15"
+  integrity sha512-0c9axeafSPrRM8k8jkaps5a0nMXI6HC0vBCo8cuAcS0XUaIY6OPUplGPApAFsIe4I2NltKicEKymthBi9W/Mvw==
+
 typescript@^3.1:
   version "3.9.7"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"

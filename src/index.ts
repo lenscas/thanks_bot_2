@@ -2,10 +2,11 @@ import { Client } from 'discord.js';
 
 import db_config from '../database.json';
 import { commandPrefix, discordToken, cooldown } from '../config.json';
-import { get_commands_in, find_command, CommandParams } from './command';
+import { get_commands_in, find_command } from './command';
 import path from 'path';
 import { help } from './help';
 import { PoolWrapper } from './db';
+import { enableGhostPingDetection } from './ghostPingDetection';
 
 const client = new Client();
 
@@ -43,6 +44,6 @@ const client = new Client();
             await command?.run(create_params);
         }
     });
-
+    enableGhostPingDetection(client);
     client.login(discordToken);
 })();

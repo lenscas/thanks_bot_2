@@ -31,13 +31,23 @@ export function create_command(
     };
 }
 
-export function create_mod_command(
+export function create_moderator_command(
     run: Command['run'],
     help_text: Command['help_text'],
     aliases?: Command['aliases'],
     check?: Command['check'],
 ): Command {
-    return create_command(run, help_text, aliases, check);
+    return create_command(run, help_text, aliases, async (params) => {
+        if (!(params.message.guild && params.message.member)) {
+            return false;
+        }
+        const checkPermission = params.message.member.hasPermission.bind(params.message.member);
+
+        if (!(checkPermission('BAN_MEMBERS') && checkPermission('KICK_MEMBERS') && checkPermission('MANAGE_ROLES'))) {
+            return false;
+        }
+        return check ? await check(params) : true;
+    });
 }
 
 export type CommandTree = { group: string; commands: Array<{ name: string; command: Command } | CommandTree> };

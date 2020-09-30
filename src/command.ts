@@ -2,6 +2,7 @@ import { Client, Message } from 'discord.js';
 import { readdir, lstat } from 'fs/promises';
 import path from 'path';
 import { PoolWrapper } from './db';
+import { getCommandChannel } from './queries.queries';
 
 export type CommandParams = {
     client: Client;
@@ -10,11 +11,23 @@ export type CommandParams = {
     db: PoolWrapper;
 };
 
+export function create_limit_to_command_channel_check(check?: Command['check']): Command['check'] {
+    return async (params) => {
+        if (!params.message.guild) {
+            return false;
+        }
+        const channel = await getCommandChannel
+            .run({ server_id: params.message.guild.id }, params.db)
+            .then((x) => x[0]?.command_channel);
+        return (!channel || channel == params.message.channel.id) && (!check || (await check(params)));
+    };
+}
+
 export type Command = {
     aliases: string[];
     help_text: string;
     check: (params: CommandParams) => Promise<boolean>;
-    run: (params: CommandParams) => Promise<void>;
+    run: (params: CommandParams) => Promise<void | string>;
 };
 
 export function create_command(
@@ -29,6 +42,15 @@ export function create_command(
         aliases: aliases ?? [],
         check: check ?? (async () => true),
     };
+}
+
+export function create_command_for_command_channel(
+    run: Command['run'],
+    help_text: Command['help_text'],
+    aliases?: Command['aliases'],
+    check?: Command['check'],
+): Command {
+    return create_command(run, help_text, aliases, create_limit_to_command_channel_check(check));
 }
 
 export function create_moderator_command(

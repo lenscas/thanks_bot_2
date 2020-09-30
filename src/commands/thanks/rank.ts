@@ -1,7 +1,7 @@
-import { create_command } from '../../command';
+import { create_command_for_command_channel } from '../../command';
 import { getRankOfUser } from './queries.queries';
 
-export const command = create_command(async ({ message, db }) => {
+export const command = create_command_for_command_channel(async ({ message, db }) => {
     const user_id = message.mentions.users.first()?.id ?? message.author.id;
 
     const res = await getRankOfUser.run({ user_id, server_id: message.guild?.id }, db).then((x) => x[0]);

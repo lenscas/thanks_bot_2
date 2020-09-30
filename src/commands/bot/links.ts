@@ -1,6 +1,6 @@
-import { create_command } from '../../command';
+import { create_command_for_command_channel } from '../../command';
 
-export const command = create_command(async ({ message }) => {
+export const command = create_command_for_command_channel(async ({ message }) => {
     await message.channel.send([
         'My code is at <https://github.com/lenscas/thanks_bot_2>',
         'Bugs reports and feature requests can be asked at: <https://github.com/lenscas/thanks_bot_2/issues>',

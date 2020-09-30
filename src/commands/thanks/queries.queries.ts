@@ -44,7 +44,7 @@ export interface IGetCooldownTimeForThankingParams {
 
 /** 'GetCooldownTimeForThanking' return type */
 export interface IGetCooldownTimeForThankingResult {
-  time_between_thanking: string;
+  time_between_thanking: string | null;
 }
 
 /** 'GetCooldownTimeForThanking' query type */

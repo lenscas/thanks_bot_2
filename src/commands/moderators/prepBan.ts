@@ -1,8 +1,10 @@
 import { create_moderator_command } from '../../command';
 import { Guild, Message, GuildMember, TextChannel, MessageAttachment } from 'discord.js';
+import { getMuteRole } from './queries.queries';
+import { PoolWrapper } from '../../db';
 
 export const command = create_moderator_command(
-    async ({ message, args }) => {
+    async ({ message, args, db }) => {
         const mentioned = message.mentions.members?.array();
         if (!message.guild) {
             return;
@@ -16,7 +18,7 @@ export const command = create_moderator_command(
             return;
         }
         const personToBan = mentioned[0];
-        const fut = addMuteRole(personToBan, message.guild, message.channel);
+        const fut = addMuteRole(personToBan, message.guild, message.channel, db);
         const messageAmount = args.map((x) => Number(x)).find((x) => !isNaN(x));
         await fut;
         if (!messageAmount) {
@@ -60,8 +62,15 @@ export const command = create_moderator_command(
     ['ban', 'prep_ban', 'prepban'],
 );
 
-const addMuteRole = async (to_mute: GuildMember, server: Guild, channel: Message['channel']) => {
-    const role = server.roles.cache.find((x) => x.name == 'Muted');
+const addMuteRole = async (to_mute: GuildMember, server: Guild, channel: Message['channel'], db: PoolWrapper) => {
+    const role = await (async () => {
+        const role = await getMuteRole.run({ server_id: server.id }, db).then((x) => x[0]?.mute_role);
+        if (!role) {
+            return server.roles.cache.find((x) => x.name == 'Muted');
+        }
+        return role;
+    })();
+
     if (role) {
         await to_mute.roles.add(role);
     } else {

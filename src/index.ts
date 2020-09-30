@@ -31,17 +31,19 @@ const client = new Client();
         const cmd = messageArray[0].replace('~', '');
         const args = messageArray.slice(1);
         console.log(cmd, cmd == 'help');
+        const create_params = { args, client, db, message };
         if (cmd == 'help') {
-            await help(client, args, message, commands);
+            await help(create_params, commands);
             return;
         }
 
         const command = find_command(cmd, commands);
 
-        const create_params = { args, client, db, message };
-
         if (await command?.check(create_params)) {
-            await command?.run(create_params);
+            const res = await command?.run(create_params);
+            if (res) {
+                message.channel.send(res);
+            }
         }
     });
     enableGhostPingDetection(client);

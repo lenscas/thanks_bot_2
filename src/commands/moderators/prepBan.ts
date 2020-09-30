@@ -54,7 +54,7 @@ export const command = create_moderator_command(
             return;
         }
         channel.send({
-            content: `${message.author.username} ${message.member?.nickname} <@${message.author.id}>`,
+            content: `${personToBan.user.username} ${personToBan.nickname} <@${personToBan.id}>`,
             files: [attachment],
         });
     },

@@ -16,6 +16,7 @@ If you want more information about a specific command, just pass the command as 
 const check_command_channel = create_limit_to_command_channel_check();
 export async function help(params: CommandParams, commandTree: CommandTree): Promise<void> {
     if (!params.message.guild || !(await check_command_channel(params))) {
+        console.log('got here?');
         return;
     }
     const { message, args } = params;

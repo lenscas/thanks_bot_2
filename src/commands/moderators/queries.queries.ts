@@ -120,3 +120,104 @@ const getMuteRoleIR: any = {"name":"get_mute_role","params":[{"name":"server_id"
 export const getMuteRole = new PreparedQuery<IGetMuteRoleParams,IGetMuteRoleResult>(getMuteRoleIR);
 
 
+/** 'EnableSubmissionChannel' parameters type */
+export interface IEnableSubmissionChannelParams {
+  server_id: string | null | void;
+  from_channel: string | null | void;
+  to_channel: string | null | void;
+}
+
+/** 'EnableSubmissionChannel' return type */
+export type IEnableSubmissionChannelResult = void;
+
+/** 'EnableSubmissionChannel' query type */
+export interface IEnableSubmissionChannelQuery {
+  params: IEnableSubmissionChannelParams;
+  result: IEnableSubmissionChannelResult;
+}
+
+const enableSubmissionChannelIR: any = {"name":"enable_submission_channel","params":[{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":829,"b":837,"line":29,"col":9}]}},{"name":"from_channel","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":841,"b":852,"line":29,"col":21}]}},{"name":"to_channel","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":856,"b":865,"line":29,"col":36}]}}],"usedParamSet":{"server_id":true,"from_channel":true,"to_channel":true},"statement":{"body":"INSERT INTO hidden_submissions (server_id, from_channel, stored_channel)\nVALUES (:server_id, :from_channel, :to_channel)","loc":{"a":747,"b":866,"line":28,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO hidden_submissions (server_id, from_channel, stored_channel)
+ * VALUES (:server_id, :from_channel, :to_channel)
+ * ```
+ */
+export const enableSubmissionChannel = new PreparedQuery<IEnableSubmissionChannelParams,IEnableSubmissionChannelResult>(enableSubmissionChannelIR);
+
+
+/** 'CheckIfChannelsAreAlreadyUsed' parameters type */
+export interface ICheckIfChannelsAreAlreadyUsedParams {
+  server_id: string | null | void;
+  from_channel: string | null | void;
+  to_channel: string | null | void;
+}
+
+/** 'CheckIfChannelsAreAlreadyUsed' return type */
+export interface ICheckIfChannelsAreAlreadyUsedResult {
+  from_channel_count: string | null;
+  stored_channel_count: string | null;
+}
+
+/** 'CheckIfChannelsAreAlreadyUsed' query type */
+export interface ICheckIfChannelsAreAlreadyUsedQuery {
+  params: ICheckIfChannelsAreAlreadyUsedParams;
+  result: ICheckIfChannelsAreAlreadyUsedResult;
+}
+
+const checkIfChannelsAreAlreadyUsedIR: any = {"name":"check_if_channels_are_already_used","params":[{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1035,"b":1043,"line":36,"col":27},{"a":1228,"b":1236,"line":42,"col":27}]}},{"name":"from_channel","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1073,"b":1084,"line":37,"col":28}]}},{"name":"to_channel","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1268,"b":1277,"line":43,"col":30}]}}],"usedParamSet":{"server_id":true,"from_channel":true,"to_channel":true},"statement":{"body":"SELECT\n    (\n        SELECT count(*) AS from_channel_count\n        FROM hidden_submissions\n        WHERE server_id = :server_id\n        AND from_channel = :from_channel\n    ) AS from_channel_count,\n    (\n        SELECT count(*) AS stored_channel_count\n        FROM hidden_submissions\n        WHERE server_id = :server_id\n        AND stored_channel = :to_channel\n    ) as stored_channel_count","loc":{"a":917,"b":1307,"line":32,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     (
+ *         SELECT count(*) AS from_channel_count
+ *         FROM hidden_submissions
+ *         WHERE server_id = :server_id
+ *         AND from_channel = :from_channel
+ *     ) AS from_channel_count,
+ *     (
+ *         SELECT count(*) AS stored_channel_count
+ *         FROM hidden_submissions
+ *         WHERE server_id = :server_id
+ *         AND stored_channel = :to_channel
+ *     ) as stored_channel_count
+ * ```
+ */
+export const checkIfChannelsAreAlreadyUsed = new PreparedQuery<ICheckIfChannelsAreAlreadyUsedParams,ICheckIfChannelsAreAlreadyUsedResult>(checkIfChannelsAreAlreadyUsedIR);
+
+
+/** 'EndSubmission' parameters type */
+export interface IEndSubmissionParams {
+  server_id: string | null | void;
+  from_channel: string | null | void;
+}
+
+/** 'EndSubmission' return type */
+export interface IEndSubmissionResult {
+  stored_channel: string;
+}
+
+/** 'EndSubmission' query type */
+export interface IEndSubmissionQuery {
+  params: IEndSubmissionParams;
+  result: IEndSubmissionResult;
+}
+
+const endSubmissionIR: any = {"name":"end_submission","params":[{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1388,"b":1396,"line":48,"col":19}]}},{"name":"from_channel","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1418,"b":1429,"line":49,"col":20}]}}],"usedParamSet":{"server_id":true,"from_channel":true},"statement":{"body":"DELETE FROM hidden_submissions\nWHERE server_id = :server_id\nAND from_channel = :from_channel\nRETURNING stored_channel","loc":{"a":1338,"b":1454,"line":47,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM hidden_submissions
+ * WHERE server_id = :server_id
+ * AND from_channel = :from_channel
+ * RETURNING stored_channel
+ * ```
+ */
+export const endSubmission = new PreparedQuery<IEndSubmissionParams,IEndSubmissionResult>(endSubmissionIR);
+
+

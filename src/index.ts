@@ -7,6 +7,7 @@ import path from 'path';
 import { help } from './help';
 import { PoolWrapper } from './db';
 import { enableGhostPingDetection } from './ghostPingDetection';
+import { dealWithPossibleSubmission } from './hiddenSubmissionTrigger';
 
 const client = new Client();
 
@@ -16,6 +17,9 @@ const client = new Client();
     const db = new PoolWrapper(db_config.dev);
 
     client.on('message', async (message) => {
+        if (!dealWithPossibleSubmission(message, db)) {
+            return;
+        }
         if (!message.content.startsWith(commandPrefix)) return;
 
         console.log(cooldowns);

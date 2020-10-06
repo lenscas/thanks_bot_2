@@ -25,7 +25,7 @@
     "axios": "^0.20.0",
     "cli-table3": "^0.6.0",
     "discord.js": "^12.3.1",
-    "pg": "^8.3.3",
+    "pg": "^8.4.0",
     "typescript-pattern-matching": "^1.0.1"
   },
   "devDependencies": {

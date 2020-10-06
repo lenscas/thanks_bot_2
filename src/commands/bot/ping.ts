@@ -1,6 +1,6 @@
-import { create_command } from '../../command';
+import { create_command_for_command_channel } from '../../command';
 
-export const command = create_command(
+export const command = create_command_for_command_channel(
     async ({ message }) => {
         const msg = await message.channel.send('Pinging...');
         const latency = msg.createdTimestamp - message.createdTimestamp;

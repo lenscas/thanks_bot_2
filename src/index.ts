@@ -32,7 +32,7 @@ const client = new Client();
         }, cooldown * 10000 + 1);
 
         const messageArray = message.content.split(' ');
-        const cmd = messageArray[0].replace('~', '');
+        const cmd = messageArray[0].replace(commandPrefix, '');
         const args = messageArray.slice(1);
         console.log(cmd, cmd == 'help');
         const create_params = { args, client, db, message };

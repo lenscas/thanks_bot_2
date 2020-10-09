@@ -3,9 +3,9 @@ import { top } from './queries.queries';
 import Table from 'cli-table3';
 
 export const command = create_command_for_command_channel(
-    async ({ message, db }) => {
+    async ({ client, message, db }) => {
         const res = await Promise.all(
-            await top.run({ server_id: message.guild?.id, user_id: message.member?.id }, db).then((x) =>
+            await top.run({ server_id: message.guild?.id, user_id: client.user?.id }, db).then((x) =>
                 x.map(async (x) => {
                     const user = message.guild?.member(x.user_id);
                     return { user: user?.nickname ?? user?.displayName ?? x.user_id, times: x.times };

@@ -50,6 +50,7 @@ export async function dealWithPossibleSubmission(message: Message, db: PoolWrapp
                 }),
             ),
     );
+    await message.channel.send('Your submission has been submitted');
     await message.delete({ reason: 'Its a submission' });
     return false;
 }

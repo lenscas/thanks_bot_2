@@ -6,17 +6,14 @@ export function enableGhostPingDetection(client: Client): void {
     client.on('messageUpdate', async (oldMessage, newMessage) => {
         if (!oldMessage.guild) return;
 
-        if (!(oldMessage.mentions.members?.first() || oldMessage.mentions.roles.first())) {
-            return;
-        }
-
-        let hasRemovedPing = !!(!newMessage.mentions.members && oldMessage.mentions.members);
-        hasRemovedPing =
-            hasRemovedPing ||
-            !!oldMessage.mentions.members?.every((x) => !!newMessage.mentions.members?.find((y) => y.id == x.id));
-        hasRemovedPing =
-            hasRemovedPing ||
-            oldMessage.mentions.roles.every((x) => !!newMessage.mentions.roles.find((y) => y.id == x.id));
+        const hasRemovedPing =
+            //check if there was a members ping
+            (oldMessage.mentions.members?.first() &&
+                //check if there is 1 members ping that is not inside the new message
+                oldMessage.mentions.members?.some((x) => !!newMessage.mentions.members?.every((y) => y.id != x.id))) ||
+            //do the same but now for roles
+            (oldMessage.mentions.roles.first() &&
+                oldMessage.mentions.roles?.some((x) => !!newMessage.mentions.roles?.every((y) => y.id != x.id)));
 
         if (hasRemovedPing) {
             const embed = new MessageEmbed()

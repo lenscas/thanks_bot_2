@@ -7,7 +7,10 @@ export const command = create_command(
             'If the code is larger than 2,000 characters, then consider using a service such as <https://paste.myst.rs/>',
             '\\``` scripting language',
             '    //your code here',
-            '\\````',
+            '\\```',
+            '```',
+            '//your code here',
+            '```',
         ]);
     },
     'Explains how to paste code neatly',

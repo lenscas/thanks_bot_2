@@ -19,11 +19,14 @@ export function enableGhostPingDetection(client: Client): void {
             const embed = new MessageEmbed()
                 .setColor('#ff6a6a')
                 .setTitle('Ghost ping detected!')
-                .addField('**Author**', oldMessage.author)
-                .addField('**Origional Message**', oldMessage, true)
-                .addField('**New Message**', newMessage, true)
-                .addField('**Type**', 'Sender sent a message. Then proceeded to edit the ping out of the message.')
-                .setTimestamp();
+                .addField('**Author**', oldMessage.author);
+            if (oldMessage.mentions.members && oldMessage.mentions.members.size > 0) {
+                embed.addField('Pinged user(s):', oldMessage.mentions.members?.array(), true);
+            }
+            if (oldMessage.mentions.roles.size > 0) {
+                embed.addField('pinged role(s):', oldMessage.mentions.roles.array(), true);
+            }
+            embed.setTimestamp();
             await oldMessage.channel.send(embed);
         }
     });
@@ -35,10 +38,15 @@ export function enableGhostPingDetection(client: Client): void {
             const embed = new MessageEmbed()
                 .setColor('#ff6a6a')
                 .setTitle('Ghost ping detected!')
-                .addField('**Sender**', message.author)
-                .addField('**Message**', message.content)
-                .addField('**Type**', 'Sender sent a message, and then proceeded to delete it thereafter.')
-                .setTimestamp();
+                .addField('**Sender**', message.author);
+            if (message.mentions.members && message.mentions.members.size > 0) {
+                embed.addField('pinged user(s):', message.mentions.members.array(), true);
+            }
+            if (message.mentions.roles.size > 0) {
+                embed.addField('pinged role(s):', message.mentions.roles.array(), true);
+            }
+
+            embed.setTimestamp();
             await message.channel.send(embed);
         }
     });

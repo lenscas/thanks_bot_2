@@ -7,7 +7,7 @@ export const command = create_command_for_command_channel(
         const res = await Promise.all(
             await top.run({ server_id: message.guild?.id, user_id: client.user?.id }, db).then((x) =>
                 x.map(async (x) => {
-                    const user = message.guild?.member(x.user_id);
+                    const user = await message.guild?.members.fetch(x.user_id);
                     return { user: user?.nickname ?? user?.displayName ?? x.user_id, times: x.times };
                 }),
             ),

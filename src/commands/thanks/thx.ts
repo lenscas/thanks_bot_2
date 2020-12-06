@@ -44,7 +44,7 @@ export const command = create_command(
         await params.message.channel.send(returnMessage);
     },
     'Lets me know that someone helped you out or was awesome in another way.',
-    ['thanks', 'thank'],
+    ['thanks', 'thank', 'ty'],
     async ({ message }) => !!message.guild,
 );
 

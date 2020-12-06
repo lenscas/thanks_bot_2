@@ -80,15 +80,17 @@ export async function get_commands_in(dir: string, group = ''): Promise<CommandT
     const commands = await Promise.all(
         (
             await Promise.all(
-                files.map(async (file) => {
-                    const full_path = path.join(dir, file);
-                    return {
-                        file: await lstat(full_path),
-                        name: file,
-                        path: full_path,
-                        parsed_path: path.parse(full_path),
-                    };
-                }),
+                files
+                    .filter((file) => !file.startsWith('_'))
+                    .map(async (file) => {
+                        const full_path = path.join(dir, file);
+                        return {
+                            file: await lstat(full_path),
+                            name: file,
+                            path: full_path,
+                            parsed_path: path.parse(full_path),
+                        };
+                    }),
             )
         )
             .filter((x) => x.file.isDirectory() || x.parsed_path.ext != '.sql')

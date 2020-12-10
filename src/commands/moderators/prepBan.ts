@@ -1,7 +1,6 @@
 import { create_moderator_command } from '../../command';
-import { Guild, Message, GuildMember, TextChannel, MessageAttachment } from 'discord.js';
-import { getMuteRole } from './queries.queries';
-import { PoolWrapper } from '../../db';
+import { TextChannel, MessageAttachment } from 'discord.js';
+import { addMuteRole } from './_base';
 
 export const command = create_moderator_command(
     async ({ message, args, db }) => {
@@ -61,19 +60,3 @@ export const command = create_moderator_command(
     'Prepares someone to get banned by muting them and by copying the given amount of messages to the log channel',
     ['ban', 'prep_ban', 'prepban'],
 );
-
-const addMuteRole = async (to_mute: GuildMember, server: Guild, channel: Message['channel'], db: PoolWrapper) => {
-    const role = await (async () => {
-        const role = await getMuteRole.run({ server_id: server.id }, db).then((x) => x[0]?.mute_role);
-        if (!role) {
-            return server.roles.cache.find((x) => x.name == 'Muted');
-        }
-        return role;
-    })();
-
-    if (role) {
-        await to_mute.roles.add(role);
-    } else {
-        await channel.send('Could not find mute role. Did not mute this person.');
-    }
-};

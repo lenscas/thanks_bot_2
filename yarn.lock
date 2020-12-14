@@ -105,10 +105,30 @@
     chalk "^4.1.0"
     debug "^4.1.1"
 
+"@pgtyped/query@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@pgtyped/query/-/query-0.9.0.tgz#609eb2181c14a66bd2a2c84ce0d5a6c137cda40a"
+  integrity sha512-9n/2YjbhQ+vAqcnlaUAKvao3T0FneZ0CheW0+BeVMUKuWzQoh+odaOCa630PQR6QuIM+5GY7VD4sqKrkiL7UVg==
+  dependencies:
+    "@pgtyped/wire" "^0.9.0"
+    "@types/chalk" "^2.2.0"
+    "@types/debug" "^4.1.4"
+    antlr4ts "^0.5.0-alpha.3"
+    chalk "^4.1.0"
+    debug "^4.1.1"
+
 "@pgtyped/wire@^0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@pgtyped/wire/-/wire-0.8.0.tgz#745b6d1f8d03e256bdbad7257f099d990ae45cf3"
   integrity sha512-Tx84n/fuBDDqtxLjRaSanZndGczlIugT9vrzqaRyldlOYHzrNIsKaMoJo+X6/iETWj50DTY45MPHDFyG4UXaFw==
+  dependencies:
+    "@types/debug" "^4.1.4"
+    debug "^4.1.1"
+
+"@pgtyped/wire@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@pgtyped/wire/-/wire-0.9.0.tgz#08e755de8426a92afe2794b265df6adf9a798428"
+  integrity sha512-IMzTN5zRf+4R3nJvO+YsTgAqIevIiFSuQjB3pvYP+6XAjEEpBFSumSBmMB6g8ejtPK3HsKiwZqaUaW06etENrQ==
   dependencies:
     "@types/debug" "^4.1.4"
     debug "^4.1.1"

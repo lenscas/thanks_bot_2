@@ -22,7 +22,7 @@
   "dependencies": {
     "@pgtyped/query": "^0.8.2",
     "@types/node": "^14.14.13",
-    "axios": "^0.20.0",
+    "axios": "^0.21.0",
     "cli-table3": "^0.6.0",
     "discord.js": "^12.3.1",
     "pg": "^8.3.3",

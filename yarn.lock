@@ -74,12 +74,12 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
-"@pgtyped/cli@^0.8.2":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@pgtyped/cli/-/cli-0.8.2.tgz#d81052d9375aeb5af614390a11f3174485ff10de"
-  integrity sha512-vVq99ucGY32K55n2PJXU5cSPqtMUp6o0jWXASrEvcXRX0E1GfU6eEKEFly2lgROjchz+oQWE5iwDb6j/H3PQGQ==
+"@pgtyped/cli@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@pgtyped/cli/-/cli-0.10.1.tgz#550139baafee354d8bfc486c1678d7116c0e9c82"
+  integrity sha512-j9mmrsqk2WhpWK6u6TGQyuDvg6VUiMJk1ddC2yp6YxYr0lfQlD83lhLqg2MkEuxFSDvi0Ktx+/eNMfhIQoD9bg==
   dependencies:
-    "@pgtyped/query" "^0.8.2"
+    "@pgtyped/query" "^0.10.1"
     "@types/nunjucks" "^3.1.3"
     camel-case "^4.1.1"
     chalk "^4.0.0"
@@ -92,6 +92,19 @@
     minimist "^1.2.5"
     nunjucks "3.2.2"
     pascal-case "^3.1.1"
+    ts-parse-database-url "^1.0.3"
+
+"@pgtyped/query@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@pgtyped/query/-/query-0.10.1.tgz#540dd98d15725d3d3a2dfdae192cdf050430a147"
+  integrity sha512-dXq8KB/EOPiwu6/tnFAEBgL1J1nuwOq3lBQA+UTTYkvc4YKEtB54JChCFSVlDYe0r7Uv8VCrbYobx1GuxU/7rw==
+  dependencies:
+    "@pgtyped/wire" "^0.10.1"
+    "@types/chalk" "^2.2.0"
+    "@types/debug" "^4.1.4"
+    antlr4ts "^0.5.0-alpha.3"
+    chalk "^4.1.0"
+    debug "^4.1.1"
 
 "@pgtyped/query@^0.8.2":
   version "0.8.2"
@@ -103,6 +116,14 @@
     "@types/debug" "^4.1.4"
     antlr4ts "^0.5.0-alpha.3"
     chalk "^4.1.0"
+    debug "^4.1.1"
+
+"@pgtyped/wire@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@pgtyped/wire/-/wire-0.10.1.tgz#629829ca25cbb57b8e86d0b04aee8563dc68c4dc"
+  integrity sha512-eJ0G5r5RJmeGuDeanx9raYHRgfEDk+tzKKGzNxgrNjKNSk5mKAtqXye6lujL9PxpZJXGMfX82bBDHCCB8wyb2A==
+  dependencies:
+    "@types/debug" "^4.1.4"
     debug "^4.1.1"
 
 "@pgtyped/wire@^0.8.0":
@@ -1810,7 +1831,7 @@ mocha@^8.1.3:
     yargs-parser "13.1.2"
     yargs-unparser "2.0.0"
 
-"mongodb-uri@>= 0.9.7":
+"mongodb-uri@>= 0.9.7", mongodb-uri@^0.9.7:
   version "0.9.7"
   resolved "https://registry.yarnpkg.com/mongodb-uri/-/mongodb-uri-0.9.7.tgz#0f771ad16f483ae65f4287969428e9fbc4aa6181"
   integrity sha1-D3ca0W9IOuZfQoeWlCjp+8SqYYE=
@@ -2639,6 +2660,13 @@ ts-node@^9.1.1:
     make-error "^1.1.1"
     source-map-support "^0.5.17"
     yn "3.1.1"
+
+ts-parse-database-url@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/ts-parse-database-url/-/ts-parse-database-url-1.0.3.tgz#8a41e00f584c02e0274d98f4e9b86f4eb45f9365"
+  integrity sha512-7AIP9EZyKsgaeGpu+Yhu6xDQtwbKDfkw5zBUsuYXju79tFRj6u8w2W+5Ag5wtCS6LM1jOB4iIqDNyFYX758wVQ==
+  dependencies:
+    mongodb-uri "^0.9.7"
 
 tslib@^1.8.1:
   version "1.14.1"

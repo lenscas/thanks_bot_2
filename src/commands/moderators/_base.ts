@@ -1,4 +1,4 @@
-import { Guild, GuildMember, Message } from 'discord.js';
+import { Client, Guild, GuildMember, Message } from 'discord.js';
 import { PoolWrapper } from '../../db';
 import { getMuteRole } from './queries.queries';
 
@@ -31,4 +31,32 @@ export const addMuteRole = async (
         await channel.send('Could not find mute role. Did not mute this person.');
         return false;
     }
+};
+export const removeFirstLine = (input: string): string => {
+    const inputArray = input.split('\n');
+    inputArray.shift();
+    return inputArray.join('\n').trim();
+};
+
+export type getChannelIdFromMentionRes = { id: string } | { error: string };
+
+export const getChannelIdFromMention = (mention: string): getChannelIdFromMentionRes => {
+    if (!mention.startsWith('<#')) {
+        return { error: "Channel id's should start with a `<#" };
+    }
+    if (!mention.endsWith('>')) {
+        return { error: "Channel id's should end with a `>" };
+    }
+    return { id: mention.slice(2, -1) };
+};
+export const checkIfChannelIsText = async (client: Client, channelId: string): Promise<string | true> => {
+    try {
+        const res_channel = await client.channels.fetch(channelId);
+        if (!res_channel.isText()) {
+            return 'The given channel is not a text channel.';
+        }
+    } catch (e) {
+        return 'Could not fetch the given channel';
+    }
+    return true;
 };

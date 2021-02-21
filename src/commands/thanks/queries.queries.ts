@@ -1,4 +1,4 @@
-/** Types generated for queries found in "./src/commands/thanks/queries.sql" */
+/** Types generated for queries found in "src/commands/thanks/queries.sql" */
 import { PreparedQuery } from '@pgtyped/query';
 
 /** 'Top' parameters type */

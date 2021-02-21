@@ -48,3 +48,24 @@ DELETE FROM hidden_submissions
 WHERE server_id = :server_id
 AND from_channel = :from_channel
 RETURNING stored_channel;
+
+/* @name check_if_command_exists */
+SELECT count(*) 
+FROM custom_commands
+WHERE server_id = :server_id
+AND "name" = :name;
+
+/* @name add_command */
+INSERT INTO custom_commands (server_id, "name", "message", channel_id)
+VALUES (:server_id, :name, :message, :channel_id);
+
+/* @name delete_command */
+DELETE FROM custom_commands
+WHERE server_id = :server_id
+AND "name" = :name;
+
+/* @name edit_command */
+UPDATE custom_commands
+SET channel_id=:channel_id, message=:message
+WHERE server_id = :server_id
+AND "name"=:name;

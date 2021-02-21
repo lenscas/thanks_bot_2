@@ -1,4 +1,4 @@
-/** Types generated for queries found in "./src/commands/moderators/queries.sql" */
+/** Types generated for queries found in "src/commands/moderators/queries.sql" */
 import { PreparedQuery } from '@pgtyped/query';
 
 /** 'UpdateThankTime' parameters type */
@@ -219,5 +219,124 @@ const endSubmissionIR: any = {"name":"end_submission","params":[{"name":"server_
  * ```
  */
 export const endSubmission = new PreparedQuery<IEndSubmissionParams,IEndSubmissionResult>(endSubmissionIR);
+
+
+/** 'CheckIfCommandExists' parameters type */
+export interface ICheckIfCommandExistsParams {
+  server_id: string | null | void;
+  name: string | null | void;
+}
+
+/** 'CheckIfCommandExists' return type */
+export interface ICheckIfCommandExistsResult {
+  count: string | null;
+}
+
+/** 'CheckIfCommandExists' query type */
+export interface ICheckIfCommandExistsQuery {
+  params: ICheckIfCommandExistsParams;
+  result: ICheckIfCommandExistsResult;
+}
+
+const checkIfCommandExistsIR: any = {"name":"check_if_command_exists","params":[{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1551,"b":1559,"line":55,"col":19}]}},{"name":"name","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1575,"b":1578,"line":56,"col":14}]}}],"usedParamSet":{"server_id":true,"name":true},"statement":{"body":"SELECT count(*) \nFROM custom_commands\nWHERE server_id = :server_id\nAND \"name\" = :name","loc":{"a":1494,"b":1578,"line":53,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT count(*) 
+ * FROM custom_commands
+ * WHERE server_id = :server_id
+ * AND "name" = :name
+ * ```
+ */
+export const checkIfCommandExists = new PreparedQuery<ICheckIfCommandExistsParams,ICheckIfCommandExistsResult>(checkIfCommandExistsIR);
+
+
+/** 'AddCommand' parameters type */
+export interface IAddCommandParams {
+  server_id: string | null | void;
+  name: string | null | void;
+  message: string | null | void;
+  channel_id: string | null | void;
+}
+
+/** 'AddCommand' return type */
+export type IAddCommandResult = void;
+
+/** 'AddCommand' query type */
+export interface IAddCommandQuery {
+  params: IAddCommandParams;
+  result: IAddCommandResult;
+}
+
+const addCommandIR: any = {"name":"add_command","params":[{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1686,"b":1694,"line":60,"col":9}]}},{"name":"name","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1698,"b":1701,"line":60,"col":21}]}},{"name":"message","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1705,"b":1711,"line":60,"col":28}]}},{"name":"channel_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1715,"b":1724,"line":60,"col":38}]}}],"usedParamSet":{"server_id":true,"name":true,"message":true,"channel_id":true},"statement":{"body":"INSERT INTO custom_commands (server_id, \"name\", \"message\", channel_id)\nVALUES (:server_id, :name, :message, :channel_id)","loc":{"a":1606,"b":1725,"line":59,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO custom_commands (server_id, "name", "message", channel_id)
+ * VALUES (:server_id, :name, :message, :channel_id)
+ * ```
+ */
+export const addCommand = new PreparedQuery<IAddCommandParams,IAddCommandResult>(addCommandIR);
+
+
+/** 'DeleteCommand' parameters type */
+export interface IDeleteCommandParams {
+  server_id: string | null | void;
+  name: string | null | void;
+}
+
+/** 'DeleteCommand' return type */
+export type IDeleteCommandResult = void;
+
+/** 'DeleteCommand' query type */
+export interface IDeleteCommandQuery {
+  params: IDeleteCommandParams;
+  result: IDeleteCommandResult;
+}
+
+const deleteCommandIR: any = {"name":"delete_command","params":[{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1803,"b":1811,"line":64,"col":19}]}},{"name":"name","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1827,"b":1830,"line":65,"col":14}]}}],"usedParamSet":{"server_id":true,"name":true},"statement":{"body":"DELETE FROM custom_commands\nWHERE server_id = :server_id\nAND \"name\" = :name","loc":{"a":1756,"b":1830,"line":63,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM custom_commands
+ * WHERE server_id = :server_id
+ * AND "name" = :name
+ * ```
+ */
+export const deleteCommand = new PreparedQuery<IDeleteCommandParams,IDeleteCommandResult>(deleteCommandIR);
+
+
+/** 'EditCommand' parameters type */
+export interface IEditCommandParams {
+  channel_id: string | null | void;
+  message: string | null | void;
+  server_id: string | null | void;
+  name: string | null | void;
+}
+
+/** 'EditCommand' return type */
+export type IEditCommandResult = void;
+
+/** 'EditCommand' query type */
+export interface IEditCommandQuery {
+  params: IEditCommandParams;
+  result: IEditCommandResult;
+}
+
+const editCommandIR: any = {"name":"edit_command","params":[{"name":"channel_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1898,"b":1907,"line":69,"col":16}]}},{"name":"message","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1919,"b":1925,"line":69,"col":37}]}},{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1946,"b":1954,"line":70,"col":19}]}},{"name":"name","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1968,"b":1971,"line":71,"col":12}]}}],"usedParamSet":{"channel_id":true,"message":true,"server_id":true,"name":true},"statement":{"body":"UPDATE custom_commands\nSET channel_id=:channel_id, message=:message\nWHERE server_id = :server_id\nAND \"name\"=:name","loc":{"a":1859,"b":1971,"line":68,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE custom_commands
+ * SET channel_id=:channel_id, message=:message
+ * WHERE server_id = :server_id
+ * AND "name"=:name
+ * ```
+ */
+export const editCommand = new PreparedQuery<IEditCommandParams,IEditCommandResult>(editCommandIR);
 
 

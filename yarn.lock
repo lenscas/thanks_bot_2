@@ -93,6 +93,18 @@
     nunjucks "3.2.2"
     pascal-case "^3.1.1"
 
+"@pgtyped/query@^0.10.2":
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/@pgtyped/query/-/query-0.10.2.tgz#5d364ed2106b9fdfebfe5e1b3c07e618f1333b08"
+  integrity sha512-RP9UTtd7QBBB4tqWLLtQbVM+l2LGtJQhM9GP4kYMeeLO/XDd1gjaqQqSBFbsw5w3rtiv/8WC97xew5zjnpswrQ==
+  dependencies:
+    "@pgtyped/wire" "^0.10.1"
+    "@types/chalk" "^2.2.0"
+    "@types/debug" "^4.1.4"
+    antlr4ts "^0.5.0-alpha.3"
+    chalk "^4.1.0"
+    debug "^4.1.1"
+
 "@pgtyped/query@^0.8.2":
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/@pgtyped/query/-/query-0.8.2.tgz#796025951fccb2123b832c83a027be6fe06fc43b"
@@ -103,6 +115,14 @@
     "@types/debug" "^4.1.4"
     antlr4ts "^0.5.0-alpha.3"
     chalk "^4.1.0"
+    debug "^4.1.1"
+
+"@pgtyped/wire@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@pgtyped/wire/-/wire-0.10.1.tgz#629829ca25cbb57b8e86d0b04aee8563dc68c4dc"
+  integrity sha512-eJ0G5r5RJmeGuDeanx9raYHRgfEDk+tzKKGzNxgrNjKNSk5mKAtqXye6lujL9PxpZJXGMfX82bBDHCCB8wyb2A==
+  dependencies:
+    "@types/debug" "^4.1.4"
     debug "^4.1.1"
 
 "@pgtyped/wire@^0.8.0":

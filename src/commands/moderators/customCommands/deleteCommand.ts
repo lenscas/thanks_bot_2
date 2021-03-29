@@ -1,5 +1,5 @@
-import { create_moderator_command } from '../../command';
-import { deleteCommand } from './queries.queries';
+import { create_moderator_command } from '../../../command';
+import { deleteCommand } from '../queries.queries';
 
 export const command = create_moderator_command(async ({ message, args, db }) => {
     const name = args[0];

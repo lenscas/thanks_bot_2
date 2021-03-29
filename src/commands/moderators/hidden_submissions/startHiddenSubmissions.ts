@@ -1,5 +1,5 @@
-import { create_moderator_command } from '../../command';
-import { checkIfChannelsAreAlreadyUsed, enableSubmissionChannel } from './queries.queries';
+import { create_moderator_command } from '../../../command';
+import { checkIfChannelsAreAlreadyUsed, enableSubmissionChannel } from '../queries.queries';
 
 export const command = create_moderator_command(async ({ message, db }) => {
     const asArr = message.mentions.channels.array();

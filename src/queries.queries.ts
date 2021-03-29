@@ -127,3 +127,34 @@ const getEveryCustomCommandNameIR: any = {"name":"get_every_custom_command_name"
 export const getEveryCustomCommandName = new PreparedQuery<IGetEveryCustomCommandNameParams,IGetEveryCustomCommandNameResult>(getEveryCustomCommandNameIR);
 
 
+/** 'GetAntiSpamConfig' parameters type */
+export interface IGetAntiSpamConfigParams {
+  server_id: string | null | void;
+}
+
+/** 'GetAntiSpamConfig' return type */
+export interface IGetAntiSpamConfigResult {
+  channel_report_mutes: string | null;
+  mute_role: string | null;
+  muted_marker_role: string | null;
+}
+
+/** 'GetAntiSpamConfig' query type */
+export interface IGetAntiSpamConfigQuery {
+  params: IGetAntiSpamConfigParams;
+  result: IGetAntiSpamConfigResult;
+}
+
+const getAntiSpamConfigIR: any = {"name":"get_anti_spam_config","params":[{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":685,"b":693,"line":31,"col":19}]}}],"usedParamSet":{"server_id":true},"statement":{"body":"SELECT channel_report_mutes, mute_role, muted_marker_role\nFROM server_config\nWHERE server_id = :server_id","loc":{"a":589,"b":693,"line":29,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT channel_report_mutes, mute_role, muted_marker_role
+ * FROM server_config
+ * WHERE server_id = :server_id
+ * ```
+ */
+export const getAntiSpamConfig = new PreparedQuery<IGetAntiSpamConfigParams,IGetAntiSpamConfigResult>(getAntiSpamConfigIR);
+
+

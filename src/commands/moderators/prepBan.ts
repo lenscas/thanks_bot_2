@@ -1,6 +1,7 @@
 import { create_moderator_command } from '../../command';
 import { TextChannel, MessageAttachment } from 'discord.js';
 import { addMuteRole } from './_base';
+import { messagesToFile } from '../../spamProtection';
 
 export const command = create_moderator_command(
     async ({ message, args, db }) => {
@@ -27,21 +28,9 @@ export const command = create_moderator_command(
         }
         const messages = await message.channel.messages.fetch({ before: message.id, limit: messageAmount }, true);
         const channel = message.guild.channels.cache.find((x) => x.name == 'ban-reason');
-        const asString = messages
-            .map((x) => {
-                return {
-                    date: x.createdAt,
-                    authorName: x.author.username,
-                    authorId: x.author.id,
-                    content: x.content,
-                };
-            })
-            .map(
-                (partial) =>
-                    `${partial.date.toDateString()} ${partial.authorName} (${partial.authorId}) : ${partial.content}`,
-            )
-            .join('\n-------\n');
-        const asBuffer = Buffer.from(asString, 'utf-8');
+
+        const asBuffer = messagesToFile(messages.array().map((v) => ({ ...v, createdAt: v.createdAt.getTime() })));
+
         const attachment = new MessageAttachment(asBuffer, 'messages.txt');
         if (!channel) {
             await message.channel.send('Could not get the evidence channel');

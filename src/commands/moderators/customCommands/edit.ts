@@ -1,6 +1,6 @@
-import { create_moderator_command } from '../../command';
-import { checkIfCommandExists, editCommand } from './queries.queries';
-import { checkIfChannelIsText, getChannelIdFromMention, removeFirstLine } from './_base';
+import { create_moderator_command } from '../../../command';
+import { checkIfCommandExists, editCommand } from '../queries.queries';
+import { checkIfChannelIsText, getChannelIdFromMention, removeFirstLine } from '../_base';
 
 export const command = create_moderator_command(
     async ({ message, args, db, client }) => {

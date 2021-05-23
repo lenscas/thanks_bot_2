@@ -87,7 +87,9 @@ export const checkSpam = async (message: Message): Promise<boolean> => {
         content: message.content,
     });
     const lookBackUntil = message.createdTimestamp - lookBackForMS;
-    const interestingMessages = cachedMessages.filter((x) => x.serverId == guild.id && x.createdAt > lookBackUntil);
+    const interestingMessages = cachedMessages.filter(
+        (x) => x.serverId == guild.id && x.createdAt > lookBackUntil && x.author.id == message.author.id,
+    );
     const countMessages = interestingMessages.length;
     const warningGotSend = server.warnedUsers[message.member.id]
         ? server.warnedUsers[message.member.id].gotWarnedAt < message.createdTimestamp

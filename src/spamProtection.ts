@@ -102,7 +102,7 @@ export const checkSpam = async (message: Message): Promise<boolean> => {
             return true;
         }
 
-        let res = await message.channel.send(
+        const res = await message.channel.send(
             `Warning: ${message.author.toString()} stop spamming or you ***WILL*** be muted.`,
         );
         server.warnedUsers[message.member.id] = {

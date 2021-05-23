@@ -14,7 +14,7 @@ const enabledServers: {
         muteRole: string;
         mutedMarkerRole: string;
         reportChannel: string;
-        warnedUsers: { [userId: string]: number };
+        warnedUsers: { [userId: string]: { timeStamp: number; gotWarnedAt: number } };
     };
 } = {};
 
@@ -89,17 +89,26 @@ export const checkSpam = async (message: Message): Promise<boolean> => {
     const lookBackUntil = message.createdTimestamp - lookBackForMS;
     const interestingMessages = cachedMessages.filter((x) => x.serverId == guild.id && x.createdAt > lookBackUntil);
     const countMessages = interestingMessages.length;
-    if (countMessages > muteThreshold) {
+    const warningGotSend = server.warnedUsers[message.member.id]
+        ? server.warnedUsers[message.member.id].gotWarnedAt < message.createdTimestamp
+        : false;
+    if (countMessages > muteThreshold && warningGotSend) {
         await muteUser(message, message.guild, message.member, interestingMessages, server);
         return true;
     }
     if (countMessages > warnThreshold) {
-        if (message.member.id in server.warnedUsers) {
+        if (message.member.id in server.warnedUsers && warningGotSend) {
             await muteUser(message, message.guild, message.member, interestingMessages, server);
             return true;
         }
-        await message.channel.send(`Warning: ${message.author.toString()} stop spamming or you will be muted.`);
-        server.warnedUsers[message.member.id] = message.createdTimestamp;
+
+        const res = await message.channel.send(
+            `Warning: ${message.author.toString()} stop spamming or you ***WILL*** be muted.`,
+        );
+        server.warnedUsers[message.member.id] = {
+            timeStamp: message.createdTimestamp,
+            gotWarnedAt: res.createdTimestamp,
+        };
         return true;
     }
     return false;
@@ -113,7 +122,7 @@ setInterval(() => {
     Object.keys(enabledServers).forEach((v) => {
         const server = enabledServers[v];
         Object.keys(server.warnedUsers).forEach((x) => {
-            if (server.warnedUsers[x] < cleaningTime) {
+            if (server.warnedUsers[x].timeStamp < cleaningTime) {
                 delete server.warnedUsers[x];
             }
         });
@@ -141,7 +150,7 @@ const muteUser = async (
             await message.channel.send('Could not get the evidence channel');
             return;
         }
-        //discord.js'es types can be improved....
+        //discord.js' types can be improved....
         if (!((channel): channel is TextChannel => channel.type === 'text')(channel)) {
             await message.channel.send('Evidence channel is not a text channel');
             return;

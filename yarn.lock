@@ -2669,10 +2669,10 @@ typescript-pattern-matching@^1.0.1:
   resolved "https://registry.yarnpkg.com/typescript-pattern-matching/-/typescript-pattern-matching-1.0.1.tgz#c7f839cfe42d130b3ad719a9b253206975d7fc15"
   integrity sha512-0c9axeafSPrRM8k8jkaps5a0nMXI6HC0vBCo8cuAcS0XUaIY6OPUplGPApAFsIe4I2NltKicEKymthBi9W/Mvw==
 
-typescript@^3.9:
-  version "3.9.9"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.9.tgz#e69905c54bc0681d0518bd4d587cc6f2d0b1a674"
-  integrity sha512-kdMjTiekY+z/ubJCATUPlRDl39vXYiMV9iyeMuEuXZh2we6zz80uovNN2WlAxmmdE/Z/YQe+EbOEXB5RHEED3w==
+typescript@^4.3:
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.3.tgz#5401db69bd3203daf1851a1a74d199cb3112c11a"
+  integrity sha512-rUvLW0WtF7PF2b9yenwWUi9Da9euvDRhmH7BLyBG4DCFfOJ850LGNknmRpp8Z8kXNUPObdZQEfKOiHtXuQHHKA==
 
 undefsafe@^2.0.3:
   version "2.0.3"

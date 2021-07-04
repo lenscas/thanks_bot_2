@@ -1,7 +1,7 @@
-import { create_moderator_command } from '../../command';
+import { create_command } from '../../command';
 import { addMuteRole, getMutedRoleId } from './_base';
 
-export const command = create_moderator_command(
+export const command = create_command(
     async ({ message, args, db }) => {
         const mentioned = message.mentions.members?.array();
         const guild = message.guild;
@@ -28,4 +28,7 @@ export const command = create_moderator_command(
     },
     'Mutes one or more people for X minutes',
     [],
+    async ({ message }) => {
+        return message.member?.hasPermission('MANAGE_ROLES') ?? false;
+    },
 );

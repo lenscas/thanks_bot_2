@@ -87,12 +87,12 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@pgtyped/cli@^0.10.2":
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/@pgtyped/cli/-/cli-0.10.4.tgz#524b17f112c5d32f1a47efcbb6ac7adfbd01e9fa"
-  integrity sha512-AG/pPGmbzPPcd76pqJAqQapL25xpyr27cbDVI8/yMYKUy2NkqczqhhgN6+mugF5Z1w+wHn2STOaKgr1Ytj11eg==
+"@pgtyped/cli@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@pgtyped/cli/-/cli-0.11.0.tgz#c74dc7470cc572d0d2bbee5f8c9679acd97d86b0"
+  integrity sha512-yvXfd2aJw33l39l2FPuDkbmtVqn9XNmxsw4cklnU7Al04Uu6h/e/4O+X9BicePrtvjoGnv6w8jKp7qxDk4DwuA==
   dependencies:
-    "@pgtyped/query" "^0.10.4"
+    "@pgtyped/query" "^0.11.0"
     "@types/nunjucks" "^3.1.3"
     camel-case "^4.1.1"
     chalk "^4.0.0"
@@ -103,12 +103,12 @@
     glob "^7.1.6"
     io-ts "^2.1.2"
     io-ts-reporters "^1.0.0"
-    minimist "^1.2.5"
     nunjucks "3.2.3"
     pascal-case "^3.1.1"
     ts-parse-database-url "^1.0.3"
+    yargs "^17.0.1"
 
-"@pgtyped/query@^0.10.2", "@pgtyped/query@^0.10.4":
+"@pgtyped/query@^0.10.2":
   version "0.10.4"
   resolved "https://registry.yarnpkg.com/@pgtyped/query/-/query-0.10.4.tgz#f8cec445088d5a26d9cca45a80885acd4652d9f0"
   integrity sha512-V7oFezoYGpOGmE/oiqZp82cCC2ko3VE7JFl+EvhP0xdf08u6dTaBd1E8dXkycjqjw7qGNH3+z0LJEA3rVUDsRA==
@@ -120,10 +120,30 @@
     chalk "^4.1.0"
     debug "^4.1.1"
 
+"@pgtyped/query@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@pgtyped/query/-/query-0.11.0.tgz#49f59193a7a192e95d672ca10e259ec120d80a53"
+  integrity sha512-MApOM81ybJBMXAtpowPUm9lvCPPglNWs52Wl453D7w1C58uLPkQ6ETdVQtWaLtFI8hnpJtqIVt42jTvlRGo0xA==
+  dependencies:
+    "@pgtyped/wire" "^0.11.0"
+    "@types/chalk" "^2.2.0"
+    "@types/debug" "^4.1.4"
+    antlr4ts "0.5.0-alpha.4"
+    chalk "^4.1.0"
+    debug "^4.1.1"
+
 "@pgtyped/wire@^0.10.1":
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/@pgtyped/wire/-/wire-0.10.1.tgz#629829ca25cbb57b8e86d0b04aee8563dc68c4dc"
   integrity sha512-eJ0G5r5RJmeGuDeanx9raYHRgfEDk+tzKKGzNxgrNjKNSk5mKAtqXye6lujL9PxpZJXGMfX82bBDHCCB8wyb2A==
+  dependencies:
+    "@types/debug" "^4.1.4"
+    debug "^4.1.1"
+
+"@pgtyped/wire@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@pgtyped/wire/-/wire-0.11.0.tgz#1835e0cf815d2fcbdee1c12f77ec348197dad86e"
+  integrity sha512-EBMb/b23waeRO61W4qgpRpll0qTmuHpBLDfwZd8O19rxN7Gj6r0hUVCOlJq1BA5+Cj2+380VsZ5d4RJkDX5oGg==
   dependencies:
     "@types/debug" "^4.1.4"
     debug "^4.1.1"
@@ -2982,6 +3002,19 @@ yargs@^15.3.1:
     which-module "^2.0.0"
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
+
+yargs@^17.0.1:
+  version "17.0.1"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-17.0.1.tgz#6a1ced4ed5ee0b388010ba9fd67af83b9362e0bb"
+  integrity sha512-xBBulfCc8Y6gLFcrPvtqKz9hz8SO0l1Ni8GgDekvBX2ro0HRQImDGnikfc33cgzcYUSncapnNcZDjVFIH3f6KQ==
+  dependencies:
+    cliui "^7.0.2"
+    escalade "^3.1.1"
+    get-caller-file "^2.0.5"
+    require-directory "^2.1.1"
+    string-width "^4.2.0"
+    y18n "^5.0.5"
+    yargs-parser "^20.2.2"
 
 yn@3.1.1:
   version "3.1.1"

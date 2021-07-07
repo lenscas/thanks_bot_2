@@ -1,5 +1,5 @@
 import { create_moderator_command } from '../../../command';
-import { deletePoll, getMessagesFromPoll, getPoll, getPollsInChannel, getReactEmoji } from './queries.queries';
+import { deletePoll, getMessagesFromPoll, getPoll, getPollsInChannel } from './queries.queries';
 
 export const command = create_moderator_command(
     async ({ args, db, message }) => {
@@ -10,11 +10,11 @@ export const command = create_moderator_command(
         let reactEmoji: string;
         let pollId: string;
         if (name) {
-            let res = await getPoll.run({ ...params, name }, db);
+            const res = await getPoll.run({ ...params, name }, db);
             if (res.length == 0) {
                 return "Looks like there isn't a poll active in this channel with this name.";
             }
-            let poll = res[0];
+            const poll = res[0];
             reactEmoji = poll.react_emoji;
             messages = res.map((x) => x.message_id);
             pollId = poll.poll_id;
@@ -24,8 +24,7 @@ export const command = create_moderator_command(
                 return 'No active polls found in this channel';
             }
             if (polls.length == 1) {
-                console.log(polls, params);
-                let poll = polls[0];
+                const poll = polls[0];
                 reactEmoji = poll.react_emoji;
                 messages = await getMessagesFromPoll
                     .run({ poll_id: poll.id }, db)

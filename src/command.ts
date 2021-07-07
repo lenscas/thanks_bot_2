@@ -93,7 +93,7 @@ export async function get_commands_in(dir: string, group = ''): Promise<CommandT
                     }),
             )
         )
-            .filter((x) => x.file.isDirectory() || x.parsed_path.ext != '.sql')
+            .filter((x) => x.file.isDirectory() || (x.parsed_path.ext != '.sql' && x.parsed_path.ext != '.map'))
             .filter((x) => {
                 if (x.file.isDirectory()) {
                     return true;

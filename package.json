@@ -19,10 +19,13 @@
   },
   "dependencies": {
     "@pgtyped/query": "^0.10.2",
+    "@types/fast-levenshtein": "^0.0.2",
     "@types/node": "^14.14.13",
     "axios": "^0.21.0",
     "cli-table3": "^0.6.0",
     "discord.js": "^12.3.1",
+    "fast-levenshtein": "^3.0.0",
+    "get-urls": "^10.0.0",
     "pg": "^8.3.3",
     "typescript-pattern-matching": "^1.0.1"
   },

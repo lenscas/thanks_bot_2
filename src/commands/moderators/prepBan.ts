@@ -1,7 +1,7 @@
 import { create_moderator_command } from '../../command';
 import { TextChannel, MessageAttachment } from 'discord.js';
 import { addMuteRole } from './_base';
-import { messagesToFile } from '../../spamProtection';
+import { cachedMessagesToFile } from '../../protection/spam';
 
 export const command = create_moderator_command(
     async ({ message, args, db }) => {
@@ -29,7 +29,9 @@ export const command = create_moderator_command(
         const messages = await message.channel.messages.fetch({ before: message.id, limit: messageAmount }, true);
         const channel = message.guild.channels.cache.find((x) => x.name == 'ban-reason');
 
-        const asBuffer = messagesToFile(messages.array().map((v) => ({ ...v, createdAt: v.createdAt.getTime() })));
+        const asBuffer = cachedMessagesToFile(
+            messages.array().map((v) => ({ ...v, createdAt: v.createdAt.getTime() })),
+        );
 
         const attachment = new MessageAttachment(asBuffer, 'messages.txt');
         if (!channel) {

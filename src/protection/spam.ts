@@ -1,22 +1,7 @@
 import { Guild, GuildMember, Message, MessageAttachment, TextChannel, User } from 'discord.js';
-import { PoolWrapper } from './db';
-import { getAntiSpamConfig } from './queries.queries';
-
-const lookBackForMS = 2000;
-const cleanTimeMessages = 3000;
-const cleanTimeWarnings = 6000;
-
-const muteThreshold = 5;
-const warnThreshold = 3;
-
-const enabledServers: {
-    [serverId: string]: {
-        muteRole: string;
-        mutedMarkerRole: string;
-        reportChannel: string;
-        warnedUsers: { [userId: string]: { timeStamp: number; gotWarnedAt: number } };
-    };
-} = {};
+import { PoolWrapper } from '../db';
+import { messagesToFile } from './helpers';
+import { getProtectionConfig } from './queries.queries';
 
 type CachedMessage = {
     serverId: string;
@@ -25,30 +10,39 @@ type CachedMessage = {
     content: string;
 };
 
-export const messagesToFile = (messages: Array<Omit<CachedMessage, 'serverId'>>): Buffer => {
-    const asString = messages
-        .map((x) => {
+const lookBackForMS = 2000;
+const cleanTimeMessages = 3000;
+const cleanTimeWarnings = 6000;
+
+const muteThreshold = 5;
+const warnThreshold = 3;
+
+export const enabledServers: {
+    [serverId: string]: {
+        muteRole: string;
+        mutedMarkerRole: string;
+        reportChannel: string;
+        warnedUsers: { [userId: string]: { timeStamp: number; gotWarnedAt: number } };
+    };
+} = {};
+
+export const cachedMessagesToFile = (messages: Array<Omit<CachedMessage, 'serverId'>>): Buffer => {
+    return messagesToFile(
+        messages.map((x) => {
             return {
-                date: x.createdAt,
+                date: new Date(x.createdAt),
                 authorName: x.author.username,
                 authorId: x.author.id,
                 content: x.content,
             };
-        })
-        .map(
-            (partial) =>
-                `${new Date(partial.date).toDateString()} ${partial.authorName} (${partial.authorId}) : ${
-                    partial.content
-                }`,
-        )
-        .join('\n-------\n');
-    return Buffer.from(asString, 'utf-8');
+        }),
+    );
 };
 
 let cachedMessages: Array<CachedMessage> = [];
 
 export const enableSpamProtection = async (serverId: string, db: PoolWrapper): Promise<string> => {
-    const config = (await getAntiSpamConfig.run({ server_id: serverId }, db))[0];
+    const config = (await getProtectionConfig.run({ server_id: serverId }, db))[0];
     if (!(config && config.channel_report_mutes && config.muted_marker_role)) {
         return 'Anti spam is not configured. Configure it using !configureSpamProtection';
     }
@@ -115,10 +109,12 @@ export const checkSpam = async (message: Message): Promise<boolean> => {
     }
     return false;
 };
+
 setInterval(() => {
     const cleaningTime = Date.now() - cleanTimeMessages;
     cachedMessages = cachedMessages.filter((x) => x.createdAt > cleaningTime);
 }, cleanTimeMessages);
+
 setInterval(() => {
     const cleaningTime = Date.now() - cleanTimeWarnings;
     Object.keys(enabledServers).forEach((v) => {
@@ -131,19 +127,19 @@ setInterval(() => {
     });
 }, cleanTimeWarnings);
 
-const muteUser = async (
+export const muteUser = async (
     message: Message,
     guild: Guild,
     member: GuildMember,
     messages: Array<CachedMessage>,
     server: typeof enabledServers['a'],
-) => {
+): Promise<void> => {
     try {
         await Promise.all([
             member.roles.add(server.muteRole, 'spamming'),
             member.roles.add(server.mutedMarkerRole, 'spamming'),
         ]);
-        const asBuffer = messagesToFile(messages);
+        const asBuffer = cachedMessagesToFile(messages);
 
         const attachment = new MessageAttachment(asBuffer, 'messages.txt');
 

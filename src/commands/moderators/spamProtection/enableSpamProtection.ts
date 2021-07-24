@@ -1,5 +1,5 @@
 import { create_moderator_command } from '../../../command';
-import { enableSpamProtection } from '../../../spamProtection';
+import { enableSpamProtection } from '../../../protection/spam';
 
 export const command = create_moderator_command(
     async ({ message, db }) => {

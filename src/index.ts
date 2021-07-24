@@ -9,7 +9,8 @@ import { PoolWrapper } from './db';
 import { enableGhostPingDetection } from './ghostPingDetection';
 import { dealWithPossibleSubmission } from './hiddenSubmissionTrigger';
 import { getCommandToRun } from './queries.queries';
-import { checkSpam } from './spamProtection';
+import { checkSpam } from './protection/spam';
+import { checkScam } from './protection/scam';
 
 const client = new Client();
 
@@ -20,6 +21,9 @@ const client = new Client();
     client.on('message', async (message) => {
         try {
             if (await checkSpam(message)) {
+                return;
+            }
+            if (checkScam(message, client, db)) {
                 return;
             }
             if (!dealWithPossibleSubmission(message, db)) {

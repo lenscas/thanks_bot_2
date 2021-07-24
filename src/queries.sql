@@ -24,8 +24,3 @@ LIMIT 1;
 SELECT "name"
 FROM custom_commands
 WHERE server_id = :server_id;
-
-/* @name get_anti_spam_config */
-SELECT channel_report_mutes, mute_role, muted_marker_role
-FROM server_config
-WHERE server_id = :server_id;

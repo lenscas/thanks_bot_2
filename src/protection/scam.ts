@@ -5,8 +5,21 @@ import { get as levenshteinDistance } from 'fast-levenshtein';
 import { muteAndReportUser } from './helpers';
 import { PoolWrapper } from '../db';
 
+const peopleWhoSendPossibleScam: {
+    [server: string]: {
+        [userId: string]: {
+            messageToDelete: {
+                messageId: string;
+                channelId: string;
+            };
+            offendDate: Date;
+        };
+    };
+} = {};
+
 const steamHost = 'steamcommunity.com';
 const range = 7;
+const cleanWarningEveryMS = 300000;
 
 export const checkScam = async (message: Message, client: Client, db: PoolWrapper): Promise<boolean> => {
     try {
@@ -26,6 +39,35 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
         if (!has_link_in_range) {
             return false;
         }
+        peopleWhoSendPossibleScam[message.guild.id] = peopleWhoSendPossibleScam[message.guild.id] || {};
+        let warnedStruct = peopleWhoSendPossibleScam[message.guild.id][message.member.id];
+        if (!warnedStruct || warnedStruct.offendDate.getTime() < Date.now() - cleanWarningEveryMS) {
+            warnedStruct = {
+                messageToDelete: {
+                    messageId: message.id,
+                    channelId: message.channel.id,
+                },
+                offendDate: new Date(),
+            };
+            peopleWhoSendPossibleScam[message.guild.id][message.member.id] = warnedStruct;
+            const content =
+                '***WARNING!***\nPossible scam link detected.\n' +
+                message.member.toString() +
+                ' please refrain from sending links to this site. Next offence will result in automatic moderator action.';
+            await (client as any).api.channels[message.channel.id].messages.post({
+                data: {
+                    content,
+                    message_reference: {
+                        message_id: message.id,
+                        channel_id: message.channel.id,
+                        guild_id: message.guild.id,
+                    },
+                },
+            });
+
+            return true;
+        }
+
         const success = await muteAndReportUser(
             message.member,
             message.guild,
@@ -40,11 +82,26 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
             ],
             'possible scam',
         );
+        try {
+            message.member.send(
+                'You have send too many messages with suspicious links and have been automatically muted to prevent further incidents.\nPlease contact a moderator.',
+            );
+        } catch (_) {}
         if (!success) {
             await message.channel.send('Possible scam detected, but could not properly report it.');
         }
 
         await message.delete({ reason: 'Most likely a scam!' });
+        try {
+            let x = await message.guild.channels
+                .resolve(warnedStruct.messageToDelete.channelId)
+                ?.fetch()
+                .then((x) => {
+                    if (x.isText()) {
+                        return x.messages.delete(warnedStruct.messageToDelete.messageId);
+                    }
+                });
+        } catch (_) {}
         return true;
     } catch (e) {
         console.error(e);
@@ -54,3 +111,20 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
     }
     return false;
 };
+
+setInterval(() => {
+    const cleaningTime = Date.now() - cleanWarningEveryMS;
+    console.log(peopleWhoSendPossibleScam);
+    Object.keys(peopleWhoSendPossibleScam).forEach((x) => {
+        const channels = peopleWhoSendPossibleScam[x];
+        Object.keys(channels).forEach((k) => {
+            let channel = channels[k];
+            console.log(channel.offendDate.getTime(), cleaningTime);
+            if (channel.offendDate.getTime() < cleaningTime) {
+                console.log('got here?');
+                delete peopleWhoSendPossibleScam[x][k];
+            }
+        });
+    });
+    console.log(peopleWhoSendPossibleScam);
+}, cleanWarningEveryMS);

@@ -54,6 +54,7 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
                 '***WARNING!***\nPossible scam link detected.\n' +
                 message.member.toString() +
                 ' please refrain from sending links to this site. Next offence will result in automatic moderator action.';
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             await (client as any).api.channels[message.channel.id].messages.post({
                 data: {
                     content,
@@ -84,7 +85,7 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
         );
         try {
             message.member.send(
-                'You have send too many messages with suspicious links and have been automatically muted to prevent further incidents.\nPlease contact a moderator.',
+                'You have sent too many messages with suspicious links and have been automatically muted to prevent further incidents.\nPlease contact a moderator.',
             );
         } catch (_) {}
         if (!success) {
@@ -93,7 +94,7 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
 
         await message.delete({ reason: 'Most likely a scam!' });
         try {
-            let x = await message.guild.channels
+            await message.guild.channels
                 .resolve(warnedStruct.messageToDelete.channelId)
                 ?.fetch()
                 .then((x) => {
@@ -118,7 +119,7 @@ setInterval(() => {
     Object.keys(peopleWhoSendPossibleScam).forEach((x) => {
         const channels = peopleWhoSendPossibleScam[x];
         Object.keys(channels).forEach((k) => {
-            let channel = channels[k];
+            const channel = channels[k];
             console.log(channel.offendDate.getTime(), cleaningTime);
             if (channel.offendDate.getTime() < cleaningTime) {
                 console.log('got here?');

@@ -23,7 +23,7 @@ const client = new Client();
             if (await checkSpam(message)) {
                 return;
             }
-            if (checkScam(message, client, db)) {
+            if (!checkScam(message, client, db)) {
                 return;
             }
             if (!dealWithPossibleSubmission(message, db)) {

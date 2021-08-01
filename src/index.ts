@@ -11,19 +11,21 @@ import { dealWithPossibleSubmission } from './hiddenSubmissionTrigger';
 import { getCommandToRun } from './queries.queries';
 import { checkSpam } from './protection/spam';
 import { checkScam } from './protection/scam';
+import { setMutesAgain } from './commands/moderators/mute';
 
 const client = new Client();
 
 (async () => {
     const commands = await get_commands_in(path.join(__dirname, 'commands'));
     const db = new PoolWrapper(db_config.dev);
-
+    await setMutesAgain(db, client);
     client.on('message', async (message) => {
         try {
             if (await checkSpam(message)) {
                 return;
             }
-            if (!checkScam(message, client, db)) {
+            if (await checkScam(message, client, db)) {
+                console.log('it is a scam!');
                 return;
             }
             if (!dealWithPossibleSubmission(message, db)) {

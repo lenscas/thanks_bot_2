@@ -18,7 +18,7 @@ const peopleWhoSendPossibleScam: {
 } = {};
 
 const steamHost = 'steamcommunity.com';
-const range = 7;
+const range = 5;
 const cleanWarningEveryMS = 300000;
 
 export const checkScam = async (message: Message, client: Client, db: PoolWrapper): Promise<boolean> => {
@@ -109,8 +109,8 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
         try {
             await message.channel.send('Something has gone wrong while checking if a message was a scam.');
         } catch (e) {}
+        return true;
     }
-    return false;
 };
 
 setInterval(() => {

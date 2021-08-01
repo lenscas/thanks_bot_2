@@ -1,11 +1,11 @@
-import { Client, Guild, GuildMember, Message } from 'discord.js';
+import { Client, Guild, GuildMember, Message, Role } from 'discord.js';
 import { PoolWrapper } from '../../db';
 import { getMuteRole } from './queries.queries';
 
-export const getMutedRoleId = async (server: Guild, db: PoolWrapper): Promise<string | null> => {
+export const getMutedRole = async (server: Guild, db: PoolWrapper): Promise<string | Role | null> => {
     const role = await getMuteRole.run({ server_id: server.id }, db).then((x) => x[0]?.mute_role);
     if (!role) {
-        return server.roles.cache.find((x) => x.name == 'Muted')?.id || null;
+        return server.roles.cache.find((x) => x.name == 'Muted') || null;
     }
     return role;
 };
@@ -15,21 +15,14 @@ export const addMuteRole = async (
     server: Guild,
     channel: Message['channel'],
     db: PoolWrapper,
-): Promise<boolean> => {
-    const role = await (async () => {
-        const role = await getMuteRole.run({ server_id: server.id }, db).then((x) => x[0]?.mute_role);
-        if (!role) {
-            return server.roles.cache.find((x) => x.name == 'Muted');
-        }
-        return role;
-    })();
-
+): Promise<[true, string | Role] | [false]> => {
+    const role = await getMutedRole(server, db);
     if (role) {
         await to_mute.roles.add(role);
-        return true;
+        return [true, role];
     } else {
         await channel.send('Could not find mute role. Did not mute this person.');
-        return false;
+        return [false];
     }
 };
 export const removeFirstLine = (input: string): string => {

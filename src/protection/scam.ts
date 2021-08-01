@@ -18,7 +18,7 @@ const peopleWhoSendPossibleScam: {
 } = {};
 
 const steamHost = 'steamcommunity.com';
-const range = 7;
+const range = 5;
 const cleanWarningEveryMS = 300000;
 
 export const checkScam = async (message: Message, client: Client, db: PoolWrapper): Promise<boolean> => {

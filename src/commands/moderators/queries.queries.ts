@@ -340,3 +340,90 @@ const editCommandIR: any = {"name":"edit_command","params":[{"name":"channel_id"
 export const editCommand = new PreparedQuery<IEditCommandParams,IEditCommandResult>(editCommandIR);
 
 
+/** 'InsertMute' parameters type */
+export interface IInsertMuteParams {
+  server_id: string | null | void;
+  user_id: string | null | void;
+  end_date: Date | null | void;
+}
+
+/** 'InsertMute' return type */
+export type IInsertMuteResult = void;
+
+/** 'InsertMute' query type */
+export interface IInsertMuteQuery {
+  params: IInsertMuteParams;
+  result: IInsertMuteResult;
+}
+
+const insertMuteIR: any = {"name":"insert_mute","params":[{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":2064,"b":2072,"line":75,"col":9}]}},{"name":"user_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":2076,"b":2082,"line":75,"col":21}]}},{"name":"end_date","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":2086,"b":2093,"line":75,"col":31},{"a":2164,"b":2171,"line":78,"col":21}]}}],"usedParamSet":{"server_id":true,"user_id":true,"end_date":true},"statement":{"body":"INSERT INTO muted_people (server_id, user_id, end_date)\nVALUES (:server_id, :user_id, :end_date)\nON CONFLICT ON CONSTRAINT muted_people_pkey\nDO\nUPDATE SET end_date=:end_date, start_date = DEFAULT","loc":{"a":1999,"b":2193,"line":74,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * INSERT INTO muted_people (server_id, user_id, end_date)
+ * VALUES (:server_id, :user_id, :end_date)
+ * ON CONFLICT ON CONSTRAINT muted_people_pkey
+ * DO
+ * UPDATE SET end_date=:end_date, start_date = DEFAULT
+ * ```
+ */
+export const insertMute = new PreparedQuery<IInsertMuteParams,IInsertMuteResult>(insertMuteIR);
+
+
+/** 'DeleteMute' parameters type */
+export interface IDeleteMuteParams {
+  server_id: string | null | void;
+  user_id: string | null | void;
+}
+
+/** 'DeleteMute' return type */
+export type IDeleteMuteResult = void;
+
+/** 'DeleteMute' query type */
+export interface IDeleteMuteQuery {
+  params: IDeleteMuteParams;
+  result: IDeleteMuteResult;
+}
+
+const deleteMuteIR: any = {"name":"delete_mute","params":[{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":2265,"b":2273,"line":82,"col":19}]}},{"name":"user_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":2290,"b":2296,"line":83,"col":15}]}}],"usedParamSet":{"server_id":true,"user_id":true},"statement":{"body":"DELETE FROM muted_people\nWHERE server_id = :server_id\nAND user_id = :user_id","loc":{"a":2221,"b":2296,"line":81,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM muted_people
+ * WHERE server_id = :server_id
+ * AND user_id = :user_id
+ * ```
+ */
+export const deleteMute = new PreparedQuery<IDeleteMuteParams,IDeleteMuteResult>(deleteMuteIR);
+
+
+/** 'GetMutes' parameters type */
+export type IGetMutesParams = void;
+
+/** 'GetMutes' return type */
+export interface IGetMutesResult {
+  server_id: string;
+  user_id: string;
+  end_date: Date;
+}
+
+/** 'GetMutes' query type */
+export interface IGetMutesQuery {
+  params: IGetMutesParams;
+  result: IGetMutesResult;
+}
+
+const getMutesIR: any = {"name":"get_mutes","params":[],"usedParamSet":{},"statement":{"body":"SELECT server_id,user_id,end_date\nFROM muted_people","loc":{"a":2322,"b":2372,"line":86,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT server_id,user_id,end_date
+ * FROM muted_people
+ * ```
+ */
+export const getMutes = new PreparedQuery<IGetMutesParams,IGetMutesResult>(getMutesIR);
+
+

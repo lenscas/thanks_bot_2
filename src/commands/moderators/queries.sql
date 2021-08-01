@@ -69,3 +69,19 @@ UPDATE custom_commands
 SET channel_id=:channel_id, message=:message
 WHERE server_id = :server_id
 AND "name"=:name;
+
+/* @name insert_mute */
+INSERT INTO muted_people (server_id, user_id, end_date)
+VALUES (:server_id, :user_id, :end_date)
+ON CONFLICT ON CONSTRAINT muted_people_pkey
+DO
+UPDATE SET end_date=:end_date, start_date = DEFAULT;
+
+/* @name delete_mute */
+DELETE FROM muted_people
+WHERE server_id = :server_id
+AND user_id = :user_id;
+
+/* @name get_mutes */
+SELECT server_id,user_id,end_date
+FROM muted_people;

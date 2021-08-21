@@ -24,13 +24,10 @@ const client = new Client();
             if (await checkSpam(message)) {
                 return;
             }
-            if (await checkScam(message, client, db)) {
-                console.log('it is a scam!');
-                return;
-            }
             if (!dealWithPossibleSubmission(message, db)) {
                 return;
             }
+            await checkScam(message, client, db);
             if (!message.content.startsWith(commandPrefix)) return;
 
             const messageArray = (message.content.split('\n')[0] ?? '').split(' ');

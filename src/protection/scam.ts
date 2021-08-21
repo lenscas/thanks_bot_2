@@ -18,7 +18,10 @@ export const peopleWhoSendPossibleScam: {
     };
 } = {};
 
-const urls = ['steamcommunity.com', 'discord.com'];
+const urls = [
+    { link: 'steamcommunity.com', distance: 7 },
+    { link: 'discord.com', distance: 5 },
+];
 
 const range = 8;
 const cleanWarningEveryMS = 300000;
@@ -32,18 +35,21 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
         const as_arr = [...url_strings.values()];
         const links_in_range = as_arr
             .map((v) => new URL(v))
-            .filter((v) => !urls.includes(v.host))
+            .filter((v) => urls.every((a) => a.link != v.host))
             .map((v) => ({
                 url: v,
                 distances: urls
                     .map((compareAgainst) => {
                         console.log('GOT HERE!');
                         console.log(compareAgainst, v.host);
-                        return levenshteinDistance(v.host, compareAgainst);
+                        return {
+                            distance: levenshteinDistance(v.host, compareAgainst.link),
+                            comparedTo: compareAgainst,
+                        };
                     })
                     .filter((x) => {
                         console.log(x, range);
-                        return x <= range;
+                        return x.distance <= x.comparedTo.distance;
                     }),
             }))
             .filter((v) => v.distances.length > 0);

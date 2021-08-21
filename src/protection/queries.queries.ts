@@ -32,3 +32,32 @@ const getProtectionConfigIR: any = {"name":"get_protection_config","params":[{"n
 export const getProtectionConfig = new PreparedQuery<IGetProtectionConfigParams,IGetProtectionConfigResult>(getProtectionConfigIR);
 
 
+/** 'CheckIfAllUrlsAreWhitelisted' parameters type */
+export interface ICheckIfAllUrlsAreWhitelistedParams {
+  urls: readonly (string | null | void)[];
+}
+
+/** 'CheckIfAllUrlsAreWhitelisted' return type */
+export interface ICheckIfAllUrlsAreWhitelistedResult {
+  count: string | null;
+}
+
+/** 'CheckIfAllUrlsAreWhitelisted' query type */
+export interface ICheckIfAllUrlsAreWhitelistedQuery {
+  params: ICheckIfAllUrlsAreWhitelistedParams;
+  result: ICheckIfAllUrlsAreWhitelistedResult;
+}
+
+const checkIfAllUrlsAreWhitelistedIR: any = {"name":"check_if_all_urls_are_whitelisted","params":[{"name":"urls","codeRefs":{"defined":{"a":193,"b":196,"line":7,"col":7},"used":[{"a":257,"b":260,"line":11,"col":16}]},"transform":{"type":"array_spread"}}],"usedParamSet":{"urls":true},"statement":{"body":"SELECT count(*)\nFROM safe_urls\nWHERE \"url\" in :urls","loc":{"a":210,"b":260,"line":9,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT count(*)
+ * FROM safe_urls
+ * WHERE "url" in :urls
+ * ```
+ */
+export const checkIfAllUrlsAreWhitelisted = new PreparedQuery<ICheckIfAllUrlsAreWhitelistedParams,ICheckIfAllUrlsAreWhitelistedResult>(checkIfAllUrlsAreWhitelistedIR);
+
+

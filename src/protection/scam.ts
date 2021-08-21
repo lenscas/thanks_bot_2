@@ -4,8 +4,9 @@ import { URL } from 'url';
 import { get as levenshteinDistance } from 'fast-levenshtein';
 import { muteAndReportUser } from './helpers';
 import { PoolWrapper } from '../db';
+import { checkIfAllUrlsAreWhitelisted } from './queries.queries';
 
-const peopleWhoSendPossibleScam: {
+export const peopleWhoSendPossibleScam: {
     [server: string]: {
         [userId: string]: {
             messageToDelete: {
@@ -17,8 +18,9 @@ const peopleWhoSendPossibleScam: {
     };
 } = {};
 
-const steamHost = 'steamcommunity.com';
-const range = 5;
+const urls = ['steamcommunity.com', 'discord.com'];
+
+const range = 8;
 const cleanWarningEveryMS = 300000;
 
 export const checkScam = async (message: Message, client: Client, db: PoolWrapper): Promise<boolean> => {
@@ -28,18 +30,34 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
         }
         const url_strings = getUrls(message.content, { requireSchemeOrWww: true });
         const as_arr = [...url_strings.values()];
-        const has_link_in_range = as_arr
+        const links_in_range = as_arr
             .map((v) => new URL(v))
-            .filter((v) => v.host != steamHost)
-            .map((v) => ({ url: v, distance: levenshteinDistance(v.host, steamHost) }))
-            .some((v) => {
-                console.log(v.url.host + ' had a distance of: ' + v.distance + '%');
-                return v.distance <= range;
-            });
-        if (!has_link_in_range) {
+            .filter((v) => !urls.includes(v.host))
+            .map((v) => ({
+                url: v,
+                distances: urls
+                    .map((compareAgainst) => {
+                        console.log('GOT HERE!');
+                        console.log(compareAgainst, v.host);
+                        return levenshteinDistance(v.host, compareAgainst);
+                    })
+                    .filter((x) => {
+                        console.log(x, range);
+                        return x <= range;
+                    }),
+            }))
+            .filter((v) => v.distances.length > 0);
+        if (links_in_range.length == 0) {
             return false;
         }
+        const every_url_is_safe = await checkIfAllUrlsAreWhitelisted
+            .run({ urls: links_in_range.map((x) => x.url.host) }, db)
+            .then((res) => res[0].count == links_in_range.length.toString());
+
         peopleWhoSendPossibleScam[message.guild.id] = peopleWhoSendPossibleScam[message.guild.id] || {};
+        if (every_url_is_safe) {
+            return false;
+        }
         let warnedStruct = peopleWhoSendPossibleScam[message.guild.id][message.member.id];
         if (!warnedStruct || warnedStruct.offendDate.getTime() < Date.now() - cleanWarningEveryMS) {
             warnedStruct = {

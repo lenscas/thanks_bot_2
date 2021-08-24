@@ -20,7 +20,7 @@ export const peopleWhoSendPossibleScam: {
 
 const urls = [
     { link: 'steamcommunity.com', distance: 7 },
-    { link: 'discord.com', distance: 5 },
+    { link: 'discord.com', distance: 6 },
 ];
 
 const range = 8;
@@ -56,9 +56,10 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
         if (links_in_range.length == 0) {
             return false;
         }
+        const urls_to_check = [...new Set(links_in_range.map((x) => x.url.host))];
         const every_url_is_safe = await checkIfAllUrlsAreWhitelisted
-            .run({ urls: links_in_range.map((x) => x.url.host) }, db)
-            .then((res) => res[0].count == links_in_range.length.toString());
+            .run({ urls: urls_to_check }, db)
+            .then((res) => res[0].count == urls_to_check.length.toString());
 
         peopleWhoSendPossibleScam[message.guild.id] = peopleWhoSendPossibleScam[message.guild.id] || {};
         if (every_url_is_safe) {

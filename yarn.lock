@@ -3197,10 +3197,10 @@ typescript-pattern-matching@^1.0.1:
   resolved "https://registry.yarnpkg.com/typescript-pattern-matching/-/typescript-pattern-matching-1.0.1.tgz#c7f839cfe42d130b3ad719a9b253206975d7fc15"
   integrity sha512-0c9axeafSPrRM8k8jkaps5a0nMXI6HC0vBCo8cuAcS0XUaIY6OPUplGPApAFsIe4I2NltKicEKymthBi9W/Mvw==
 
-typescript@^3.9:
-  version "3.9.10"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
-  integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
+typescript@^4.4:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.2.tgz#6d618640d430e3569a1dfb44f7d7e600ced3ee86"
+  integrity sha512-gzP+t5W4hdy4c+68bfcv0t400HVJMMd2+H9B7gae1nQlBzCqvrXX+6GL/b3GAgyTH966pzrZ70/fRjwAtZksSQ==
 
 undefsafe@^2.0.3:
   version "2.0.3"

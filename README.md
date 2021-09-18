@@ -8,16 +8,26 @@ This is a simple discord bot to keep track of helpfull people so mods can reward
 -   Yarn (npm install yarn -g)
 -   Postgresql
 
-# Setup
+# Setup docker
 
-1. rename dabtabase.example.json to dabtabase.json
-2. fill in the database connection string in database.json
-3. rename postgres.example.json to postgres.json
-4. fill here the database connection in again (I know, feels redundand)
-5. run `yarn install`
-6. run `yarn migrate up` to run the migrations
+1. Install docker and docker compose
+2. Copy `database.example.json` to `database.json`
+3. Copy `postgresql.example.json` to `postgresql.json`
+4. Copy `config.example.json` to `config.json`
+5. Put your own key into the `config.json` file (You can get a key for your bot at https://discord.com/developers/applications )
+6. Run `docker-compose up` and watch the magic happen as `docker-compose` pulls in everything needed and starts the bot.
 
-Congrats, you can now run the bot.
+# Setup locally
+
+1. Copy `database.example.json` to `database.json`
+2. Fill in the details to connect to your locally running database
+3. Copy `postgresql.example.json` to `postgresql.json`
+4. Fill here the database connection in again (I know, feels redundant)
+5. Copy `config.example.json` to `config.json`
+6. Put your own key into the `config.json` file (You can get a key for your bot at https://discord.com/developers/applications )
+7. Run `yarn install`
+8. Run `yarn migrate up` to run the migrations
+9. Run `yarn start` to start the bot. Or use `yarn start:dev` to also have it automatically restart when it detects changes.
 
 # Usefull scripts
 

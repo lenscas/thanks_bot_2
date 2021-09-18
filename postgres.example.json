@@ -10,7 +10,7 @@
     "failOnError": false,
     "camelCaseColumnNames": false,
     "db": {
-        "host": "localhost",
+        "host": "postgres",
         "user": "thanks_bot_2",
         "dbName": "thanks_bot_2",
         "password": "thanks_bot_2"

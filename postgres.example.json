@@ -10,9 +10,10 @@
     "failOnError": false,
     "camelCaseColumnNames": false,
     "db": {
-        "host": "postgres",
+        "host": "localhost",
         "user": "thanks_bot_2",
         "dbName": "thanks_bot_2",
-        "password": "thanks_bot_2"
+        "password": "thanks_bot_2",
+        "port": 5433
     }
 }

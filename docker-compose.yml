@@ -8,6 +8,8 @@ services:
       - "9229:9229"
 
   postgres:
+    ports:
+      - "5433:5432"
     image: postgres:11.2-alpine
     environment:
       POSTGRES_PASSWORD: thanks_bot_2

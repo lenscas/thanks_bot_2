@@ -12,7 +12,7 @@ This is a simple discord bot to keep track of helpfull people so mods can reward
 
 1. Install docker and docker compose
 2. Copy `database.example.json` to `database.json`
-3. Copy `postgresql.example.json` to `postgresql.json`
+3. Copy `postgres.example.json` to `postgres.json`
 4. Copy `config.example.json` to `config.json`
 5. Put your own key into the `config.json` file (You can get a key for your bot at https://discord.com/developers/applications )
 6. Run `docker-compose up` and watch the magic happen as `docker-compose` pulls in everything needed and starts the bot.

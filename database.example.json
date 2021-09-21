@@ -3,7 +3,7 @@
         "driver": "pg",
         "user": "thanks_bot_2",
         "password": "thanks_bot_2",
-        "host": "localhost",
+        "host": "postgres",
         "database": "thanks_bot_2"
     },
     "sql-file": true

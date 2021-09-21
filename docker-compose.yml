@@ -1,0 +1,17 @@
+version: "3"
+services:
+  app:
+    build: .
+    depends_on:
+      - postgres
+    ports:
+      - "9229:9229"
+
+  postgres:
+    ports:
+      - "5433:5432"
+    image: postgres:11.2-alpine
+    environment:
+      POSTGRES_PASSWORD: thanks_bot_2
+      POSTGRES_USER: thanks_bot_2
+      POSTGRES_DB: thanks_bot_2

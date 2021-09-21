@@ -127,3 +127,29 @@ const getEveryCustomCommandNameIR: any = {"name":"get_every_custom_command_name"
 export const getEveryCustomCommandName = new PreparedQuery<IGetEveryCustomCommandNameParams,IGetEveryCustomCommandNameResult>(getEveryCustomCommandNameIR);
 
 
+/** 'GetEveryTest' parameters type */
+export type IGetEveryTestParams = void;
+
+/** 'GetEveryTest' return type */
+export interface IGetEveryTestResult {
+  id: number;
+}
+
+/** 'GetEveryTest' query type */
+export interface IGetEveryTestQuery {
+  params: IGetEveryTestParams;
+  result: IGetEveryTestResult;
+}
+
+const getEveryTestIR: any = {"name":"get_every_test","params":[],"usedParamSet":{},"statement":{"body":"SELECT \"id\"\nFROM test","loc":{"a":583,"b":603,"line":29,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT "id"
+ * FROM test
+ * ```
+ */
+export const getEveryTest = new PreparedQuery<IGetEveryTestParams,IGetEveryTestResult>(getEveryTestIR);
+
+

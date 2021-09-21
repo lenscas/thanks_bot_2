@@ -24,3 +24,7 @@ LIMIT 1;
 SELECT "name"
 FROM custom_commands
 WHERE server_id = :server_id;
+
+/* @name get_every_test */
+SELECT "id"
+FROM test;

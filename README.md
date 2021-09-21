@@ -1,6 +1,6 @@
 # Thanks_bot 2
 
-This is a simple discord bot to keep track of helpfull people so mods can reward them. It
+This is a simple discord bot to keep track of helpful people so mods can reward them. It also has a few moderator commands, basic scam protection and various other commands so that the members of the discord server can better help each other.
 
 # Dependencies
 
@@ -23,7 +23,7 @@ To access the DB from the host and run `yarn prepareSql`, read [How to access th
 
 1. Copy `database.example.json` to `database.json`
 2. Fill in the details to connect to your locally running database
-3. Copy `postgresql.example.json` to `postgresql.json`
+3. Copy `postgres.example.json` to `postgres.json`
 4. Fill here the database connection in again (I know, feels redundant)
 5. Copy `config.example.json` to `config.json`
 6. Put your own key into the `config.json` file (You can get a key for your bot at https://discord.com/developers/applications )

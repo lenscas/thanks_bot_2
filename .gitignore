@@ -5,3 +5,9 @@ database.json
 /docs
 build
 config.json
+database.*.json
+!database.example.json
+postgres.*.json
+!postgres.example.json
+config.*.json
+!config.example.json

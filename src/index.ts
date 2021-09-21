@@ -1,6 +1,6 @@
-import { Client } from 'discord.js';
+import { Client, Intents } from 'discord.js';
 
-import db_config from '../database.json';
+import db_config from '../database.original.json';
 import { commandPrefix, discordToken } from '../config.json';
 import { get_commands_in, find_command } from './command';
 import path from 'path';
@@ -13,7 +13,9 @@ import { checkSpam } from './protection/spam';
 import { checkScam } from './protection/scam';
 import { setMutesAgain } from './commands/moderators/mute';
 
-const client = new Client();
+const client = new Client({
+    intents: new Intents([Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES]),
+});
 
 (async () => {
     const commands = await get_commands_in(path.join(__dirname, 'commands'));

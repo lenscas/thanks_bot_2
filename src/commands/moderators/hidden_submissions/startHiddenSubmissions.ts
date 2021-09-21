@@ -2,19 +2,19 @@ import { create_moderator_command } from '../../../command';
 import { checkIfChannelsAreAlreadyUsed, enableSubmissionChannel } from '../queries.queries';
 
 export const command = create_moderator_command(async ({ message, db }) => {
-    const asArr = message.mentions.channels.array();
-    if (asArr.length == 0) {
-        return 'You need to specify 1 channel that submissions are going to be stored in';
-    }
-    if (asArr.length > 1) {
+    if (message.mentions.channels.size > 1) {
         return 'You can only specify 1 channel that submissions are going to be stored in';
+    }
+    const channel = message.mentions.channels.first();
+    if (!channel) {
+        return 'You need to specify 1 channel that submissions are going to be stored in';
     }
 
     return db.startTransaction(async (db) => {
         const params = {
             server_id: message.guild?.id,
             from_channel: message.channel.id,
-            to_channel: asArr[0].id,
+            to_channel: channel.id,
         };
         const res = await checkIfChannelsAreAlreadyUsed
             .run(params, db)

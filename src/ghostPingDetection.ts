@@ -19,15 +19,19 @@ export function enableGhostPingDetection(client: Client): void {
             const embed = new MessageEmbed()
                 .setColor('#ff6a6a')
                 .setTitle('Ghost ping detected!')
-                .addField('**Author**', oldMessage.author);
+                .addField('**Author**', oldMessage.author?.toString() ?? '');
             if (oldMessage.mentions.members && oldMessage.mentions.members.size > 0) {
-                embed.addField('Pinged user(s):', oldMessage.mentions.members?.array(), true);
+                embed.addField(
+                    'Pinged user(s):',
+                    oldMessage.mentions.members?.map((v) => v.toString()).join(' '),
+                    true,
+                );
             }
             if (oldMessage.mentions.roles.size > 0) {
-                embed.addField('pinged role(s):', oldMessage.mentions.roles.array(), true);
+                embed.addField('pinged role(s):', oldMessage.mentions.roles.map((v) => v.toString()).join(' '), true);
             }
             embed.setTimestamp();
-            await oldMessage.channel.send(embed);
+            await oldMessage.channel.send({ embeds: [embed] });
         }
     });
 
@@ -38,16 +42,16 @@ export function enableGhostPingDetection(client: Client): void {
             const embed = new MessageEmbed()
                 .setColor('#ff6a6a')
                 .setTitle('Ghost ping detected!')
-                .addField('**Sender**', message.author);
+                .addField('**Sender**', message.author?.toString() ?? '');
             if (message.mentions.members && message.mentions.members.size > 0) {
-                embed.addField('pinged user(s):', message.mentions.members.array(), true);
+                embed.addField('pinged user(s):', message.mentions.members.map((v) => v.toString()).join(' '), true);
             }
             if (message.mentions.roles.size > 0) {
-                embed.addField('pinged role(s):', message.mentions.roles.array(), true);
+                embed.addField('pinged role(s):', message.mentions.roles.map((v) => v.toString()).join(' '), true);
             }
 
             embed.setTimestamp();
-            await message.channel.send(embed);
+            await message.channel.send({ embeds: [embed] });
         }
     });
 }

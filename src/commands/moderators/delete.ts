@@ -16,7 +16,7 @@ export const command = create_moderator_command(
         //we do + 1 to also cover the message that triggered the command
         const [writtenMessage, messages] = await Promise.all([
             message.channel.send('Working on it!'),
-            message.channel.messages.fetch({ before: message.id, limit: amount + 1 }, true),
+            message.channel.messages.fetch({ before: message.id, limit: amount + 1 }),
         ]);
 
         const idsToDelete = messages

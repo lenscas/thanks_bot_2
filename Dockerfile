@@ -1,13 +1,17 @@
-FROM node:14-alpine3.12
+FROM node:16-alpine3.12
 
 WORKDIR /home/app
 
 RUN apk add yarn
+RUN apk add python3 make
+
+RUN echo "test"
 
 COPY package.json /home/app/
 COPY yarn.lock /home/app/
 
-RUN yarn install --frozen-lockfile
+RUN rm -rf node_modules
+RUN yarn install
 
 COPY . /home/app
 

@@ -27,7 +27,7 @@ export const command = create_command_for_command_channel(
         });
 
         res.forEach((x) => table.push([x.user, x.times]));
-        await message.channel.send(['The top most thanked users are\n', '```', table.toString(), '```']);
+        await message.channel.send(['The top most thanked users are\n', '```', table.toString(), '```'].join('\n'));
     },
     'Show the people who got thanked the most, mostly for the mods so they can give rewards.',
     ['list'],

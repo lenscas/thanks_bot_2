@@ -6,12 +6,11 @@ import { addMuteRole, getMutedRole } from './_base';
 
 export const command = create_command(
     async ({ message, args, db }) => {
-        const mentioned = message.mentions.members?.array();
         const guild = message.guild;
         if (!guild) {
             return;
         }
-        if (!mentioned || mentioned.length == 0) {
+        if (!message.mentions.members || message.mentions.members.size == 0) {
             return "can't mute people without knowing WHO to mute. Please ping the user(s) who need to be muted";
         }
         const to_mute_for = args.map((x) => Number(x)).find((x) => !isNaN(x) && x > 0);
@@ -19,7 +18,7 @@ export const command = create_command(
             return 'Please give a number equal to the amount of minutes that this person needs to be muted for.';
         }
         const res = await Promise.all(
-            mentioned.map(async (x): Promise<string> => {
+            message.mentions.members.map(async (x): Promise<string> => {
                 try {
                     const z = await addMuteRole(x, guild, message.channel, db);
                     if (z[0]) {
@@ -53,7 +52,7 @@ export const command = create_command(
     'Mutes one or more people for X minutes',
     [],
     async ({ message }) => {
-        return message.member?.hasPermission('MANAGE_ROLES') ?? false;
+        return message.member?.permissions.has('MANAGE_ROLES') ?? false;
     },
 );
 

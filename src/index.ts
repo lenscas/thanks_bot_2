@@ -1,6 +1,6 @@
 import { Client, Intents } from 'discord.js';
 
-import db_config from '../database.original.json';
+import db_config from '../database.json';
 import { commandPrefix, discordToken } from '../config.json';
 import { get_commands_in, find_command } from './command';
 import path from 'path';

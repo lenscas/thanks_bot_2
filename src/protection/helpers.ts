@@ -1,4 +1,4 @@
-import { Guild, GuildMember, Message, MessageAttachment, TextChannel } from 'discord.js';
+import { Guild, GuildMember, MessageAttachment } from 'discord.js';
 import { PoolWrapper } from '../db';
 import { getProtectionConfig } from './queries.queries';
 
@@ -34,8 +34,7 @@ export const muteAndReportUser = async (
     if (!channel) {
         return false;
     }
-    //discord.js' types can be improved....
-    if (!((channel): channel is TextChannel => channel.type === 'text')(channel)) {
+    if (!channel.isText()) {
         return false;
     }
     await channel.send({

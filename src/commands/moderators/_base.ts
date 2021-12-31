@@ -45,6 +45,9 @@ export const getChannelIdFromMention = (mention: string): getChannelIdFromMentio
 export const checkIfChannelIsText = async (client: Client, channelId: string): Promise<string | true> => {
     try {
         const res_channel = await client.channels.fetch(channelId);
+        if (!res_channel) {
+            return 'channel does not exist';
+        }
         if (!res_channel.isText()) {
             return 'The given channel is not a text channel.';
         }

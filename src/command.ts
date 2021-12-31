@@ -63,7 +63,7 @@ export function create_moderator_command(
         if (!(params.message.guild && params.message.member)) {
             return false;
         }
-        const checkPermission = params.message.member.hasPermission.bind(params.message.member);
+        const checkPermission = params.message.member.permissions.has.bind(params.message.member.permissions);
 
         if (!(checkPermission('BAN_MEMBERS') && checkPermission('KICK_MEMBERS') && checkPermission('MANAGE_ROLES'))) {
             return false;

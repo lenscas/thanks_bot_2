@@ -1,5 +1,6 @@
 import { create_moderator_command } from '../../../command';
 import { addMessageToPoll, createPoll } from './queries.queries';
+import { DatabaseError } from 'pg';
 
 export const command = create_moderator_command(
     async ({ args, message, db }) => {
@@ -30,15 +31,14 @@ export const command = create_moderator_command(
                         .run({ name, channel_id, server_id, react_emoji }, transaction)
                         .then((x) => x[0].id);
                 } catch (e) {
-                    if ('code' in e && e.code == '23505') {
-                        await message.channel.send('There is already a poll in this channel with that name.');
+                    if (e instanceof DatabaseError) {
+                        await message.channel.send(e.message);
                     } else {
                         await message.channel.send(
                             'Could not create poll. Perhaps a poll is already active in this channel?',
                         );
                         console.error(e);
                     }
-
                     throw e;
                 }
                 const sendMessages = [];
@@ -54,7 +54,7 @@ export const command = create_moderator_command(
                     message.channel.send('Something has gone wrong while creating the poll. Rolling back');
                     try {
                         for (const messageToRollBack of sendMessages) {
-                            await messageToRollBack.delete({ reason: 'Rolling poll back.' });
+                            await messageToRollBack.delete();
                         }
                     } catch (e) {
                         console.error(e);

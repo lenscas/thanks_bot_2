@@ -1,23 +1,23 @@
 import { create_moderator_command } from '../../command';
-import { TextChannel, MessageAttachment } from 'discord.js';
+import { MessageAttachment } from 'discord.js';
 import { addMuteRole } from './_base';
 import { cachedMessagesToFile } from '../../protection/spam';
 
 export const command = create_moderator_command(
     async ({ message, args, db }) => {
-        const mentioned = message.mentions.members?.array();
+        const mentioned = message.mentions.members;
         if (!message.guild) {
             return;
         }
-        if (!mentioned || mentioned.length == 0) {
-            await message.channel.send("can't prepare a ban without mentioning WHO to prepare for ban");
-            return;
-        }
-        if (mentioned.length > 1) {
+        if (mentioned?.size ?? 0 > 1) {
             await message.channel.send('I can only prepare 1 person at a time. Please only ping 1 person');
             return;
         }
-        const personToBan = mentioned[0];
+        const personToBan = mentioned?.first();
+        if (!personToBan) {
+            await message.channel.send("can't prepare a ban without mentioning WHO to prepare for ban");
+            return;
+        }
         const fut = addMuteRole(personToBan, message.guild, message.channel, db);
         const messageAmount = args.map((x) => Number(x)).find((x) => !isNaN(x));
         await fut;
@@ -26,12 +26,10 @@ export const command = create_moderator_command(
             await fut;
             return;
         }
-        const messages = await message.channel.messages.fetch({ before: message.id, limit: messageAmount }, true);
+        const messages = await message.channel.messages.fetch({ before: message.id, limit: messageAmount });
         const channel = message.guild.channels.cache.find((x) => x.name == 'ban-reason');
 
-        const asBuffer = cachedMessagesToFile(
-            messages.array().map((v) => ({ ...v, createdAt: v.createdAt.getTime() })),
-        );
+        const asBuffer = cachedMessagesToFile(messages.map((v) => ({ ...v, createdAt: v.createdAt.getTime() })));
 
         const attachment = new MessageAttachment(asBuffer, 'messages.txt');
         if (!channel) {
@@ -39,7 +37,7 @@ export const command = create_moderator_command(
             return;
         }
         //discord.js'es types can be improved....
-        if (!((channel): channel is TextChannel => channel.type === 'text')(channel)) {
+        if (!channel.isText()) {
             await message.channel.send('Evidence channel is not a text channel');
             return;
         }

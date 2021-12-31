@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { Message, MessageAttachment, TextChannel } from 'discord.js';
+import { Message, MessageAttachment } from 'discord.js';
 import { PoolWrapper } from './db';
 import { getChannelToCopySubmissionsTo } from './queries.queries';
 
@@ -7,7 +7,7 @@ export async function dealWithPossibleSubmission(message: Message, db: PoolWrapp
     if (!message.guild) {
         return true;
     }
-    if (message.attachments.array().length == 0) {
+    if (message.attachments.size == 0) {
         console.log('length is 0');
         return true;
     }
@@ -23,7 +23,7 @@ export async function dealWithPossibleSubmission(message: Message, db: PoolWrapp
         message.channel.send('Could not find the stored channel');
         return false;
     }
-    if (!((channel): channel is TextChannel => channel.type === 'text')(channel)) {
+    if (!channel.isText()) {
         await message.channel.send('Could not submit, stored channel is of wrong type.');
         return false;
     }
@@ -51,6 +51,6 @@ export async function dealWithPossibleSubmission(message: Message, db: PoolWrapp
             ),
     );
     await message.channel.send('Your submission has been submitted');
-    await message.delete({ reason: 'Its a submission' });
+    await message.delete();
     return false;
 }

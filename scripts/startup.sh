@@ -1,2 +1,2 @@
 yarn migrate up
-yarn start
+yarn start:dev

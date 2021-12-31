@@ -39,7 +39,9 @@ export async function help(
                         .join(','),
             );
         }
-        await message.channel.send([start_message].concat(render_group(commandTree).concat(custom_commands)));
+        await message.channel.send(
+            [start_message].concat(render_group(commandTree).concat(custom_commands)).join('\n'),
+        );
     } else {
         let found_something: string[] | Command | CommandTree | undefined;
         if (args.length == 1 && server_id && args[0] == 'CustomCommands') {
@@ -73,9 +75,9 @@ export async function help(
         if ('run' in found_something) {
             await message.channel.send(found_something.help_text);
         } else if (Array.isArray(found_something)) {
-            await message.channel.send(['**Commands**'].concat(found_something.map((v) => '`' + v + '`')));
+            await message.channel.send(['**Commands**'].concat(found_something.map((v) => '`' + v + '`')).join('\n'));
         } else {
-            await message.channel.send(render_group(found_something));
+            await message.channel.send(render_group(found_something).join('\n'));
         }
     }
 }

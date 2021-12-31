@@ -117,7 +117,7 @@ export const checkScam = async (message: Message, client: Client, db: PoolWrappe
             await message.channel.send('Possible scam detected, but could not properly report it.');
         }
 
-        await message.delete({ reason: 'Most likely a scam!' });
+        await message.delete();
         try {
             await message.guild.channels
                 .resolve(warnedStruct.messageToDelete.channelId)

@@ -30,6 +30,18 @@ const urls = [
             },
             {
                 name: 'nitro',
+                distance: 2,
+            },
+            {
+                name: 'discordnitro',
+                distance: 4,
+            },
+            {
+                name: 'n1tro',
+                distance: 2,
+            },
+            {
+                name: 'nitrodiscord',
                 distance: 4,
             },
         ],

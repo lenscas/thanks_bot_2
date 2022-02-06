@@ -8,7 +8,6 @@ export async function dealWithPossibleSubmission(message: Message, db: PoolWrapp
         return true;
     }
     if (message.attachments.size == 0) {
-        console.log('length is 0');
         return true;
     }
     const res = await getChannelToCopySubmissionsTo

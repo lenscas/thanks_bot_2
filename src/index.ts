@@ -2,7 +2,7 @@ import { Client, Intents } from 'discord.js';
 
 import db_config from '../database.json';
 import { commandPrefix, discordToken } from '../config.json';
-import { get_commands_in, find_command } from './command';
+import { get_commands_in, find_command, FillServersWithoutCommands } from './command';
 import path from 'path';
 import { help } from './help';
 import { PoolWrapper } from './db';
@@ -21,6 +21,7 @@ const client = new Client({
     const commands = await get_commands_in(path.join(__dirname, 'commands'));
     const db = new PoolWrapper(db_config.dev);
     await setMutesAgain(db, client);
+    await FillServersWithoutCommands(db);
     client.on('message', async (message) => {
         try {
             if (await checkSpam(message)) {
@@ -36,7 +37,6 @@ const client = new Client({
 
             const cmd = messageArray[0].replace(commandPrefix, '');
             const args = messageArray.slice(1);
-            console.log(cmd, cmd == 'help');
             const create_params = { args, client, db, message };
             if (cmd == 'help') {
                 await help(create_params, commands, db, message.guild?.id);

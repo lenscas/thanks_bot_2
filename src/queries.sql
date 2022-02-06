@@ -25,6 +25,14 @@ SELECT "name"
 FROM custom_commands
 WHERE server_id = :server_id;
 
-/* @name get_every_test */
-SELECT "id"
-FROM test;
+/* @name enable_commands */
+DELETE FROM servers_with_commands_disabled
+WHERE server_id = :server_id;
+
+/* @name disable_commands */
+INSERT INTO servers_with_commands_disabled
+(server_id) VALUES (:server_id);
+
+/* @name get_servers_without_commands */
+SELECT server_id
+FROM servers_with_commands_disabled;

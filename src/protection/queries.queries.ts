@@ -19,7 +19,7 @@ export interface IGetProtectionConfigQuery {
   result: IGetProtectionConfigResult;
 }
 
-const getProtectionConfigIR: any = {"name":"get_protection_config","params":[{"name":"server_id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":130,"b":138,"line":4,"col":19}]}}],"usedParamSet":{"server_id":true},"statement":{"body":"SELECT channel_report_mutes, mute_role, muted_marker_role\nFROM server_config\nWHERE server_id = :server_id","loc":{"a":34,"b":138,"line":2,"col":0}}};
+const getProtectionConfigIR: any = {"name":"get_protection_config","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":130,"b":138,"line":4,"col":19}]}}],"usedParamSet":{"server_id":true},"statement":{"body":"SELECT channel_report_mutes, mute_role, muted_marker_role\nFROM server_config\nWHERE server_id = :server_id","loc":{"a":34,"b":138,"line":2,"col":0}}};
 
 /**
  * Query generated from SQL:
@@ -48,7 +48,7 @@ export interface ICheckIfAllUrlsAreWhitelistedQuery {
   result: ICheckIfAllUrlsAreWhitelistedResult;
 }
 
-const checkIfAllUrlsAreWhitelistedIR: any = {"name":"check_if_all_urls_are_whitelisted","params":[{"name":"urls","codeRefs":{"defined":{"a":193,"b":196,"line":7,"col":7},"used":[{"a":257,"b":260,"line":11,"col":16}]},"transform":{"type":"array_spread"}}],"usedParamSet":{"urls":true},"statement":{"body":"SELECT count(*)\nFROM safe_urls\nWHERE \"url\" in :urls","loc":{"a":210,"b":260,"line":9,"col":0}}};
+const checkIfAllUrlsAreWhitelistedIR: any = {"name":"check_if_all_urls_are_whitelisted","params":[{"name":"urls","codeRefs":{"defined":{"a":193,"b":196,"line":7,"col":7},"used":[{"a":257,"b":260,"line":11,"col":16}]},"transform":{"type":"array_spread"},"required":false}],"usedParamSet":{"urls":true},"statement":{"body":"SELECT count(*)\nFROM safe_urls\nWHERE \"url\" in :urls","loc":{"a":210,"b":260,"line":9,"col":0}}};
 
 /**
  * Query generated from SQL:

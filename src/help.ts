@@ -5,6 +5,7 @@ import {
     find_something,
     create_limit_to_command_channel_check,
     CommandParams,
+    isServerInDisableList,
 } from './command';
 import { checkIfCommandExists } from './commands/moderators/queries.queries';
 import { PoolWrapper } from './db';
@@ -23,8 +24,13 @@ export async function help(
     db: PoolWrapper,
     server_id?: string,
 ): Promise<void> {
-    if (!params.message.guild || !(await check_command_channel(params))) {
-        console.log('got here?');
+    if (!params.message.guild) {
+        return;
+    }
+    if (isServerInDisableList(params.message.guild.id)) {
+        return;
+    }
+    if (!(await check_command_channel(params))) {
         return;
     }
     const { message, args } = params;

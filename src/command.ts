@@ -2,13 +2,38 @@ import { Client, Message } from 'discord.js';
 import { readdir, lstat } from 'fs/promises';
 import path from 'path';
 import { PoolWrapper } from './db';
-import { getCommandChannel } from './queries.queries';
+import { getCommandChannel, enableCommands, disableCommands, getServersWithoutCommands } from './queries.queries';
 
 export type CommandParams = {
     client: Client;
     message: Message;
     args: string[];
     db: PoolWrapper;
+};
+
+const serverIdsWithoutCommands = new Set<string>();
+
+export const addServerToNoCommandsList = async (db: PoolWrapper, server_id: string): Promise<void> => {
+    if (serverIdsWithoutCommands.has(server_id)) {
+        return;
+    }
+    await disableCommands.run({ server_id }, db);
+    serverIdsWithoutCommands.add(server_id);
+};
+
+export const removeServerFromNoCommandsList = async (db: PoolWrapper, server_id: string): Promise<void> => {
+    if (serverIdsWithoutCommands.has(server_id)) {
+        await enableCommands.run({ server_id }, db);
+        serverIdsWithoutCommands.delete(server_id);
+        return;
+    }
+};
+
+export const isServerInDisableList = (serverId: string): boolean => serverIdsWithoutCommands.has(serverId);
+
+export const FillServersWithoutCommands = async (db: PoolWrapper): Promise<void> => {
+    const res = await getServersWithoutCommands.run(undefined, db);
+    res.forEach((v) => serverIdsWithoutCommands.add(v.server_id));
 };
 
 export function create_limit_to_command_channel_check(check?: Command['check']): Command['check'] {
@@ -35,7 +60,17 @@ export function create_command(
     help_text: Command['help_text'],
     aliases?: Command['aliases'],
     check?: Command['check'],
+    overwriteNoCommands = false,
 ): Command {
+    if (!overwriteNoCommands) {
+        const oldCheck = check;
+        check = async (a) => {
+            if (a.message.guild && serverIdsWithoutCommands.has(a.message.guild.id)) {
+                return false;
+            }
+            return oldCheck == null ? true : await oldCheck(a);
+        };
+    }
     return {
         run,
         help_text,
@@ -59,17 +94,25 @@ export function create_moderator_command(
     aliases?: Command['aliases'],
     check?: Command['check'],
 ): Command {
-    return create_command(run, help_text, aliases, async (params) => {
-        if (!(params.message.guild && params.message.member)) {
-            return false;
-        }
-        const checkPermission = params.message.member.permissions.has.bind(params.message.member.permissions);
+    return create_command(
+        run,
+        help_text,
+        aliases,
+        async (params) => {
+            if (!(params.message.guild && params.message.member)) {
+                return false;
+            }
+            const checkPermission = params.message.member.permissions.has.bind(params.message.member.permissions);
 
-        if (!(checkPermission('BAN_MEMBERS') && checkPermission('KICK_MEMBERS') && checkPermission('MANAGE_ROLES'))) {
-            return false;
-        }
-        return check ? await check(params) : true;
-    });
+            if (
+                !(checkPermission('BAN_MEMBERS') && checkPermission('KICK_MEMBERS') && checkPermission('MANAGE_ROLES'))
+            ) {
+                return false;
+            }
+            return check ? await check(params) : true;
+        },
+        true,
+    );
 }
 
 export type CommandTree = { group: string; commands: Array<{ name: string; command: Command } | CommandTree> };
@@ -121,10 +164,8 @@ export async function get_commands_in(dir: string, group = ''): Promise<CommandT
 }
 
 export function find_command(command: string, tree: CommandTree): Command | undefined {
-    console.log(tree);
     for (const candidate of tree.commands) {
         if ('name' in candidate) {
-            console.log(candidate, command);
             if (candidate.name == command || candidate.command.aliases.some((alias) => command == alias)) {
                 return candidate.command;
             }

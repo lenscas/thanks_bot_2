@@ -21,7 +21,7 @@
   "dependencies": {
     "@pgtyped/query": "^0.12",
     "@types/fast-levenshtein": "^0.0.2",
-    "@types/node": "^14.14.13",
+    "@types/node": "^17.0.31",
     "axios": "^0.21.0",
     "cli-table3": "^0.6.0",
     "discord.js": "^13",

@@ -31,7 +31,7 @@
     "typescript-pattern-matching": "^1.0.1"
   },
   "devDependencies": {
-    "@pgtyped/cli": "^0.12",
+    "@pgtyped/cli": "^1.0",
     "@types/chai": "^4.2.13",
     "@types/mocha": "^8.0.3",
     "@types/pg": "^8.6",

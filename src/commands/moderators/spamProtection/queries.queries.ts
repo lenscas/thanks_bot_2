@@ -3,9 +3,9 @@ import { PreparedQuery } from '@pgtyped/query';
 
 /** 'UpdateSpamProtectionConfig' parameters type */
 export interface IUpdateSpamProtectionConfigParams {
-  server_id: string | null | void;
   channel_id: string | null | void;
   role_id: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'UpdateSpamProtectionConfig' return type */
@@ -17,7 +17,7 @@ export interface IUpdateSpamProtectionConfigQuery {
   result: IUpdateSpamProtectionConfigResult;
 }
 
-const updateSpamProtectionConfigIR: any = {"name":"updateSpamProtectionConfig","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":128,"b":136,"line":3,"col":9}]}},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":140,"b":149,"line":3,"col":21},{"a":248,"b":257,"line":7,"col":28}]}},{"name":"role_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":153,"b":159,"line":3,"col":34},{"a":283,"b":289,"line":8,"col":23}]}}],"usedParamSet":{"server_id":true,"channel_id":true,"role_id":true},"statement":{"body":"INSERT INTO server_config (server_id, channel_report_mutes, muted_marker_role)\nVALUES (:server_id, :channel_id, :role_id)\nON CONFLICT ON CONSTRAINT server_config_pk\nDO\nUPDATE SET \n    channel_report_mutes = :channel_id,\n    muted_marker_role=:role_id","loc":{"a":40,"b":289,"line":2,"col":0}}};
+const updateSpamProtectionConfigIR: any = {"usedParamSet":{"server_id":true,"channel_id":true,"role_id":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":87,"b":96}]},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":99,"b":109},{"a":207,"b":217}]},{"name":"role_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":112,"b":119},{"a":242,"b":249}]}],"statement":"INSERT INTO server_config (server_id, channel_report_mutes, muted_marker_role)\nVALUES (:server_id, :channel_id, :role_id)\nON CONFLICT ON CONSTRAINT server_config_pk\nDO\nUPDATE SET \n    channel_report_mutes = :channel_id,\n    muted_marker_role=:role_id"};
 
 /**
  * Query generated from SQL:

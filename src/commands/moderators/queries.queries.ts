@@ -16,7 +16,7 @@ export interface IUpdateThankTimeQuery {
   result: IUpdateThankTimeResult;
 }
 
-const updateThankTimeIR: any = {"name":"update_thank_time","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":100,"b":108,"line":3,"col":9}]}},{"name":"time_in_minutes","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":111,"b":125,"line":3,"col":20},{"a":208,"b":222,"line":6,"col":34}]}}],"usedParamSet":{"server_id":true,"time_in_minutes":true},"statement":{"body":"INSERT INTO server_config (server_id, time_between_thanking)\nVALUES (:server_id,:time_in_minutes)\nON CONFLICT ON CONSTRAINT server_config_pk\nDO\nUPDATE SET time_between_thanking=:time_in_minutes","loc":{"a":30,"b":222,"line":2,"col":0}}};
+const updateThankTimeIR: any = {"usedParamSet":{"server_id":true,"time_in_minutes":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":69,"b":78}]},{"name":"time_in_minutes","required":false,"transform":{"type":"scalar"},"locs":[{"a":80,"b":95},{"a":177,"b":192}]}],"statement":"INSERT INTO server_config (server_id, time_between_thanking)\nVALUES (:server_id,:time_in_minutes)\nON CONFLICT ON CONSTRAINT server_config_pk\nDO\nUPDATE SET time_between_thanking=:time_in_minutes"};
 
 /**
  * Query generated from SQL:
@@ -33,8 +33,8 @@ export const updateThankTime = new PreparedQuery<IUpdateThankTimeParams,IUpdateT
 
 /** 'SetCommandChannel' parameters type */
 export interface ISetCommandChannelParams {
-  server_id: string | null | void;
   channel_id: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'SetCommandChannel' return type */
@@ -46,7 +46,7 @@ export interface ISetCommandChannelQuery {
   result: ISetCommandChannelResult;
 }
 
-const setCommandChannelIR: any = {"name":"set_command_channel","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":322,"b":330,"line":10,"col":9}]}},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":334,"b":343,"line":10,"col":21},{"a":420,"b":429,"line":13,"col":28}]}}],"usedParamSet":{"server_id":true,"channel_id":true},"statement":{"body":"INSERT INTO server_config (server_id, command_channel)\nVALUES (:server_id, :channel_id)\nON CONFLICT ON CONSTRAINT server_config_pk\nDO\nUPDATE SET command_channel=:channel_id","loc":{"a":258,"b":429,"line":9,"col":0}}};
+const setCommandChannelIR: any = {"usedParamSet":{"server_id":true,"channel_id":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":63,"b":72}]},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":75,"b":85},{"a":161,"b":171}]}],"statement":"INSERT INTO server_config (server_id, command_channel)\nVALUES (:server_id, :channel_id)\nON CONFLICT ON CONSTRAINT server_config_pk\nDO\nUPDATE SET command_channel=:channel_id"};
 
 /**
  * Query generated from SQL:
@@ -63,8 +63,8 @@ export const setCommandChannel = new PreparedQuery<ISetCommandChannelParams,ISet
 
 /** 'SetMuteRole' parameters type */
 export interface ISetMuteRoleParams {
-  server_id: string | null | void;
   role_id: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'SetMuteRole' return type */
@@ -76,7 +76,7 @@ export interface ISetMuteRoleQuery {
   result: ISetMuteRoleResult;
 }
 
-const setMuteRoleIR: any = {"name":"set_mute_role","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":517,"b":525,"line":17,"col":9}]}},{"name":"role_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":529,"b":535,"line":17,"col":21},{"a":606,"b":612,"line":20,"col":22}]}}],"usedParamSet":{"server_id":true,"role_id":true},"statement":{"body":"INSERT INTO server_config (server_id, mute_role)\nVALUES (:server_id, :role_id)\nON CONFLICT ON CONSTRAINT server_config_pk\nDO\nUPDATE SET mute_role=:role_id","loc":{"a":459,"b":612,"line":16,"col":0}}};
+const setMuteRoleIR: any = {"usedParamSet":{"server_id":true,"role_id":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":57,"b":66}]},{"name":"role_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":69,"b":76},{"a":146,"b":153}]}],"statement":"INSERT INTO server_config (server_id, mute_role)\nVALUES (:server_id, :role_id)\nON CONFLICT ON CONSTRAINT server_config_pk\nDO\nUPDATE SET mute_role=:role_id"};
 
 /**
  * Query generated from SQL:
@@ -107,7 +107,7 @@ export interface IGetMuteRoleQuery {
   result: IGetMuteRoleResult;
 }
 
-const getMuteRoleIR: any = {"name":"get_mute_role","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":697,"b":705,"line":25,"col":19}]}}],"usedParamSet":{"server_id":true},"statement":{"body":"SELECT mute_role\nFROM server_config\nWHERE server_id = :server_id","loc":{"a":642,"b":705,"line":23,"col":0}}};
+const getMuteRoleIR: any = {"usedParamSet":{"server_id":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":54,"b":63}]}],"statement":"SELECT mute_role\nFROM server_config\nWHERE server_id = :server_id"};
 
 /**
  * Query generated from SQL:
@@ -122,8 +122,8 @@ export const getMuteRole = new PreparedQuery<IGetMuteRoleParams,IGetMuteRoleResu
 
 /** 'EnableSubmissionChannel' parameters type */
 export interface IEnableSubmissionChannelParams {
-  server_id: string | null | void;
   from_channel: string | null | void;
+  server_id: string | null | void;
   to_channel: string | null | void;
 }
 
@@ -136,7 +136,7 @@ export interface IEnableSubmissionChannelQuery {
   result: IEnableSubmissionChannelResult;
 }
 
-const enableSubmissionChannelIR: any = {"name":"enable_submission_channel","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":829,"b":837,"line":29,"col":9}]}},{"name":"from_channel","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":841,"b":852,"line":29,"col":21}]}},{"name":"to_channel","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":856,"b":865,"line":29,"col":36}]}}],"usedParamSet":{"server_id":true,"from_channel":true,"to_channel":true},"statement":{"body":"INSERT INTO hidden_submissions (server_id, from_channel, stored_channel)\nVALUES (:server_id, :from_channel, :to_channel)","loc":{"a":747,"b":866,"line":28,"col":0}}};
+const enableSubmissionChannelIR: any = {"usedParamSet":{"server_id":true,"from_channel":true,"to_channel":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":81,"b":90}]},{"name":"from_channel","required":false,"transform":{"type":"scalar"},"locs":[{"a":93,"b":105}]},{"name":"to_channel","required":false,"transform":{"type":"scalar"},"locs":[{"a":108,"b":118}]}],"statement":"INSERT INTO hidden_submissions (server_id, from_channel, stored_channel)\nVALUES (:server_id, :from_channel, :to_channel)"};
 
 /**
  * Query generated from SQL:
@@ -150,8 +150,8 @@ export const enableSubmissionChannel = new PreparedQuery<IEnableSubmissionChanne
 
 /** 'CheckIfChannelsAreAlreadyUsed' parameters type */
 export interface ICheckIfChannelsAreAlreadyUsedParams {
-  server_id: string | null | void;
   from_channel: string | null | void;
+  server_id: string | null | void;
   to_channel: string | null | void;
 }
 
@@ -167,7 +167,7 @@ export interface ICheckIfChannelsAreAlreadyUsedQuery {
   result: ICheckIfChannelsAreAlreadyUsedResult;
 }
 
-const checkIfChannelsAreAlreadyUsedIR: any = {"name":"check_if_channels_are_already_used","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1035,"b":1043,"line":36,"col":27},{"a":1228,"b":1236,"line":42,"col":27}]}},{"name":"from_channel","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1073,"b":1084,"line":37,"col":28}]}},{"name":"to_channel","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1268,"b":1277,"line":43,"col":30}]}}],"usedParamSet":{"server_id":true,"from_channel":true,"to_channel":true},"statement":{"body":"SELECT\n    (\n        SELECT count(*) AS from_channel_count\n        FROM hidden_submissions\n        WHERE server_id = :server_id\n        AND from_channel = :from_channel\n    ) AS from_channel_count,\n    (\n        SELECT count(*) AS stored_channel_count\n        FROM hidden_submissions\n        WHERE server_id = :server_id\n        AND stored_channel = :to_channel\n    ) as stored_channel_count","loc":{"a":917,"b":1307,"line":32,"col":0}}};
+const checkIfChannelsAreAlreadyUsedIR: any = {"usedParamSet":{"server_id":true,"from_channel":true,"to_channel":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":117,"b":126},{"a":310,"b":319}]},{"name":"from_channel","required":false,"transform":{"type":"scalar"},"locs":[{"a":155,"b":167}]},{"name":"to_channel","required":false,"transform":{"type":"scalar"},"locs":[{"a":350,"b":360}]}],"statement":"SELECT\n    (\n        SELECT count(*) AS from_channel_count\n        FROM hidden_submissions\n        WHERE server_id = :server_id\n        AND from_channel = :from_channel\n    ) AS from_channel_count,\n    (\n        SELECT count(*) AS stored_channel_count\n        FROM hidden_submissions\n        WHERE server_id = :server_id\n        AND stored_channel = :to_channel\n    ) as stored_channel_count"};
 
 /**
  * Query generated from SQL:
@@ -192,8 +192,8 @@ export const checkIfChannelsAreAlreadyUsed = new PreparedQuery<ICheckIfChannelsA
 
 /** 'EndSubmission' parameters type */
 export interface IEndSubmissionParams {
-  server_id: string | null | void;
   from_channel: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'EndSubmission' return type */
@@ -207,7 +207,7 @@ export interface IEndSubmissionQuery {
   result: IEndSubmissionResult;
 }
 
-const endSubmissionIR: any = {"name":"end_submission","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1388,"b":1396,"line":48,"col":19}]}},{"name":"from_channel","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1418,"b":1429,"line":49,"col":20}]}}],"usedParamSet":{"server_id":true,"from_channel":true},"statement":{"body":"DELETE FROM hidden_submissions\nWHERE server_id = :server_id\nAND from_channel = :from_channel\nRETURNING stored_channel","loc":{"a":1338,"b":1454,"line":47,"col":0}}};
+const endSubmissionIR: any = {"usedParamSet":{"server_id":true,"from_channel":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":49,"b":58}]},{"name":"from_channel","required":false,"transform":{"type":"scalar"},"locs":[{"a":79,"b":91}]}],"statement":"DELETE FROM hidden_submissions\nWHERE server_id = :server_id\nAND from_channel = :from_channel\nRETURNING stored_channel"};
 
 /**
  * Query generated from SQL:
@@ -223,8 +223,8 @@ export const endSubmission = new PreparedQuery<IEndSubmissionParams,IEndSubmissi
 
 /** 'CheckIfCommandExists' parameters type */
 export interface ICheckIfCommandExistsParams {
-  server_id: string | null | void;
   name: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'CheckIfCommandExists' return type */
@@ -238,7 +238,7 @@ export interface ICheckIfCommandExistsQuery {
   result: ICheckIfCommandExistsResult;
 }
 
-const checkIfCommandExistsIR: any = {"name":"check_if_command_exists","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1551,"b":1559,"line":55,"col":19}]}},{"name":"name","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1575,"b":1578,"line":56,"col":14}]}}],"usedParamSet":{"server_id":true,"name":true},"statement":{"body":"SELECT count(*) \nFROM custom_commands\nWHERE server_id = :server_id\nAND \"name\" = :name","loc":{"a":1494,"b":1578,"line":53,"col":0}}};
+const checkIfCommandExistsIR: any = {"usedParamSet":{"server_id":true,"name":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":56,"b":65}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":80,"b":84}]}],"statement":"SELECT count(*) \nFROM custom_commands\nWHERE server_id = :server_id\nAND \"name\" = :name"};
 
 /**
  * Query generated from SQL:
@@ -254,10 +254,10 @@ export const checkIfCommandExists = new PreparedQuery<ICheckIfCommandExistsParam
 
 /** 'AddCommand' parameters type */
 export interface IAddCommandParams {
-  server_id: string | null | void;
-  name: string | null | void;
-  message: string | null | void;
   channel_id: string | null | void;
+  message: string | null | void;
+  name: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'AddCommand' return type */
@@ -269,7 +269,7 @@ export interface IAddCommandQuery {
   result: IAddCommandResult;
 }
 
-const addCommandIR: any = {"name":"add_command","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1686,"b":1694,"line":60,"col":9}]}},{"name":"name","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1698,"b":1701,"line":60,"col":21}]}},{"name":"message","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1705,"b":1711,"line":60,"col":28}]}},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1715,"b":1724,"line":60,"col":38}]}}],"usedParamSet":{"server_id":true,"name":true,"message":true,"channel_id":true},"statement":{"body":"INSERT INTO custom_commands (server_id, \"name\", \"message\", channel_id)\nVALUES (:server_id, :name, :message, :channel_id)","loc":{"a":1606,"b":1725,"line":59,"col":0}}};
+const addCommandIR: any = {"usedParamSet":{"server_id":true,"name":true,"message":true,"channel_id":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":79,"b":88}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":91,"b":95}]},{"name":"message","required":false,"transform":{"type":"scalar"},"locs":[{"a":98,"b":105}]},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":108,"b":118}]}],"statement":"INSERT INTO custom_commands (server_id, \"name\", \"message\", channel_id)\nVALUES (:server_id, :name, :message, :channel_id)"};
 
 /**
  * Query generated from SQL:
@@ -283,8 +283,8 @@ export const addCommand = new PreparedQuery<IAddCommandParams,IAddCommandResult>
 
 /** 'DeleteCommand' parameters type */
 export interface IDeleteCommandParams {
-  server_id: string | null | void;
   name: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'DeleteCommand' return type */
@@ -296,7 +296,7 @@ export interface IDeleteCommandQuery {
   result: IDeleteCommandResult;
 }
 
-const deleteCommandIR: any = {"name":"delete_command","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1803,"b":1811,"line":64,"col":19}]}},{"name":"name","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1827,"b":1830,"line":65,"col":14}]}}],"usedParamSet":{"server_id":true,"name":true},"statement":{"body":"DELETE FROM custom_commands\nWHERE server_id = :server_id\nAND \"name\" = :name","loc":{"a":1756,"b":1830,"line":63,"col":0}}};
+const deleteCommandIR: any = {"usedParamSet":{"server_id":true,"name":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":46,"b":55}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":70,"b":74}]}],"statement":"DELETE FROM custom_commands\nWHERE server_id = :server_id\nAND \"name\" = :name"};
 
 /**
  * Query generated from SQL:
@@ -313,8 +313,8 @@ export const deleteCommand = new PreparedQuery<IDeleteCommandParams,IDeleteComma
 export interface IEditCommandParams {
   channel_id: string | null | void;
   message: string | null | void;
-  server_id: string | null | void;
   name: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'EditCommand' return type */
@@ -326,7 +326,7 @@ export interface IEditCommandQuery {
   result: IEditCommandResult;
 }
 
-const editCommandIR: any = {"name":"edit_command","params":[{"name":"channel_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1898,"b":1907,"line":69,"col":16}]}},{"name":"message","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1919,"b":1925,"line":69,"col":37}]}},{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1946,"b":1954,"line":70,"col":19}]}},{"name":"name","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":1968,"b":1971,"line":71,"col":12}]}}],"usedParamSet":{"channel_id":true,"message":true,"server_id":true,"name":true},"statement":{"body":"UPDATE custom_commands\nSET channel_id=:channel_id, message=:message\nWHERE server_id = :server_id\nAND \"name\"=:name","loc":{"a":1859,"b":1971,"line":68,"col":0}}};
+const editCommandIR: any = {"usedParamSet":{"channel_id":true,"message":true,"server_id":true,"name":true},"params":[{"name":"channel_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":38,"b":48}]},{"name":"message","required":false,"transform":{"type":"scalar"},"locs":[{"a":59,"b":66}]},{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":86,"b":95}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":108,"b":112}]}],"statement":"UPDATE custom_commands\nSET channel_id=:channel_id, message=:message\nWHERE server_id = :server_id\nAND \"name\"=:name"};
 
 /**
  * Query generated from SQL:
@@ -342,9 +342,9 @@ export const editCommand = new PreparedQuery<IEditCommandParams,IEditCommandResu
 
 /** 'InsertMute' parameters type */
 export interface IInsertMuteParams {
+  end_date: Date | null | void;
   server_id: string | null | void;
   user_id: string | null | void;
-  end_date: Date | null | void;
 }
 
 /** 'InsertMute' return type */
@@ -356,7 +356,7 @@ export interface IInsertMuteQuery {
   result: IInsertMuteResult;
 }
 
-const insertMuteIR: any = {"name":"insert_mute","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":2064,"b":2072,"line":75,"col":9}]}},{"name":"user_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":2076,"b":2082,"line":75,"col":21}]}},{"name":"end_date","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":2086,"b":2093,"line":75,"col":31},{"a":2164,"b":2171,"line":78,"col":21}]}}],"usedParamSet":{"server_id":true,"user_id":true,"end_date":true},"statement":{"body":"INSERT INTO muted_people (server_id, user_id, end_date)\nVALUES (:server_id, :user_id, :end_date)\nON CONFLICT ON CONSTRAINT muted_people_pkey\nDO\nUPDATE SET end_date=:end_date, start_date = DEFAULT","loc":{"a":1999,"b":2193,"line":74,"col":0}}};
+const insertMuteIR: any = {"usedParamSet":{"server_id":true,"user_id":true,"end_date":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":64,"b":73}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":76,"b":83}]},{"name":"end_date","required":false,"transform":{"type":"scalar"},"locs":[{"a":86,"b":94},{"a":164,"b":172}]}],"statement":"INSERT INTO muted_people (server_id, user_id, end_date)\nVALUES (:server_id, :user_id, :end_date)\nON CONFLICT ON CONSTRAINT muted_people_pkey\nDO\nUPDATE SET end_date=:end_date, start_date = DEFAULT"};
 
 /**
  * Query generated from SQL:
@@ -386,7 +386,7 @@ export interface IDeleteMuteQuery {
   result: IDeleteMuteResult;
 }
 
-const deleteMuteIR: any = {"name":"delete_mute","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":2265,"b":2273,"line":82,"col":19}]}},{"name":"user_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":2290,"b":2296,"line":83,"col":15}]}}],"usedParamSet":{"server_id":true,"user_id":true},"statement":{"body":"DELETE FROM muted_people\nWHERE server_id = :server_id\nAND user_id = :user_id","loc":{"a":2221,"b":2296,"line":81,"col":0}}};
+const deleteMuteIR: any = {"usedParamSet":{"server_id":true,"user_id":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":43,"b":52}]},{"name":"user_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":68,"b":75}]}],"statement":"DELETE FROM muted_people\nWHERE server_id = :server_id\nAND user_id = :user_id"};
 
 /**
  * Query generated from SQL:
@@ -404,9 +404,9 @@ export type IGetMutesParams = void;
 
 /** 'GetMutes' return type */
 export interface IGetMutesResult {
+  end_date: Date;
   server_id: string;
   user_id: string;
-  end_date: Date;
 }
 
 /** 'GetMutes' query type */
@@ -415,7 +415,7 @@ export interface IGetMutesQuery {
   result: IGetMutesResult;
 }
 
-const getMutesIR: any = {"name":"get_mutes","params":[],"usedParamSet":{},"statement":{"body":"SELECT server_id,user_id,end_date\nFROM muted_people","loc":{"a":2322,"b":2372,"line":86,"col":0}}};
+const getMutesIR: any = {"usedParamSet":{},"params":[],"statement":"SELECT server_id,user_id,end_date\nFROM muted_people"};
 
 /**
  * Query generated from SQL:

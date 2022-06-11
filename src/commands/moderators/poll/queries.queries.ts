@@ -3,10 +3,10 @@ import { PreparedQuery } from '@pgtyped/query';
 
 /** 'CreatePoll' parameters type */
 export interface ICreatePollParams {
-  name: string | null | void;
-  server_id: string | null | void;
   channel_id: string | null | void;
+  name: string | null | void;
   react_emoji: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'CreatePoll' return type */
@@ -20,7 +20,7 @@ export interface ICreatePollQuery {
   result: ICreatePollResult;
 }
 
-const createPollIR: any = {"name":"create_poll","params":[{"name":"name","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":92,"b":95,"line":4,"col":9}]}},{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":98,"b":106,"line":4,"col":15}]}},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":110,"b":119,"line":4,"col":27}]}},{"name":"react_emoji","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":123,"b":133,"line":4,"col":40}]}}],"usedParamSet":{"name":true,"server_id":true,"channel_id":true,"react_emoji":true},"statement":{"body":"INSERT INTO\n\tpolls (name, server_id,channel_id,react_emoji)\nVALUES (:name,:server_id, :channel_id, :react_emoji)\nRETURNING id","loc":{"a":23,"b":147,"line":2,"col":0}}};
+const createPollIR: any = {"usedParamSet":{"name":true,"server_id":true,"channel_id":true,"react_emoji":true},"params":[{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":68,"b":72}]},{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":74,"b":83}]},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":86,"b":96}]},{"name":"react_emoji","required":false,"transform":{"type":"scalar"},"locs":[{"a":99,"b":110}]}],"statement":"INSERT INTO\n\tpolls (name, server_id,channel_id,react_emoji)\nVALUES (:name,:server_id, :channel_id, :react_emoji)\nRETURNING id"};
 
 /**
  * Query generated from SQL:
@@ -36,8 +36,8 @@ export const createPoll = new PreparedQuery<ICreatePollParams,ICreatePollResult>
 
 /** 'AddMessageToPoll' parameters type */
 export interface IAddMessageToPollParams {
-  poll_id: string | null | void;
   message_id: string | null | void;
+  poll_id: string | null | void;
 }
 
 /** 'AddMessageToPoll' return type */
@@ -49,7 +49,7 @@ export interface IAddMessageToPollQuery {
   result: IAddMessageToPollResult;
 }
 
-const addMessageToPollIR: any = {"name":"add_message_to_poll","params":[{"name":"poll_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":241,"b":247,"line":10,"col":9}]}},{"name":"message_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":251,"b":260,"line":10,"col":19}]}}],"usedParamSet":{"poll_id":true,"message_id":true},"statement":{"body":"INSERT INTO\n\tpoll_messages (poll_id, message_id)\nVALUES (:poll_id, :message_id)","loc":{"a":183,"b":261,"line":8,"col":0}}};
+const addMessageToPollIR: any = {"usedParamSet":{"poll_id":true,"message_id":true},"params":[{"name":"poll_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":57,"b":64}]},{"name":"message_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":67,"b":77}]}],"statement":"INSERT INTO\n\tpoll_messages (poll_id, message_id)\nVALUES (:poll_id, :message_id)"};
 
 /**
  * Query generated from SQL:
@@ -78,7 +78,7 @@ export interface IGetMessagesFromPollQuery {
   result: IGetMessagesFromPollResult;
 }
 
-const getMessagesFromPollIR: any = {"name":"get_messages_from_poll","params":[{"name":"poll_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":354,"b":360,"line":15,"col":17}]}}],"usedParamSet":{"poll_id":true},"statement":{"body":"SELECT message_id\nFROM poll_messages\nWHERE poll_id = :poll_id","loc":{"a":300,"b":360,"line":13,"col":0}}};
+const getMessagesFromPollIR: any = {"usedParamSet":{"poll_id":true},"params":[{"name":"poll_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":53,"b":60}]}],"statement":"SELECT message_id\nFROM poll_messages\nWHERE poll_id = :poll_id"};
 
 /**
  * Query generated from SQL:
@@ -93,8 +93,8 @@ export const getMessagesFromPoll = new PreparedQuery<IGetMessagesFromPollParams,
 
 /** 'GetPollsInChannel' parameters type */
 export interface IGetPollsInChannelParams {
-  server_id: string | null | void;
   channel_id: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'GetPollsInChannel' return type */
@@ -110,7 +110,7 @@ export interface IGetPollsInChannelQuery {
   result: IGetPollsInChannelResult;
 }
 
-const getPollsInChannelIR: any = {"name":"get_polls_in_channel","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":454,"b":462,"line":20,"col":19}]}},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":482,"b":491,"line":21,"col":18}]}}],"usedParamSet":{"server_id":true,"channel_id":true},"statement":{"body":"SELECT id,name,react_emoji\nFROM polls\nWHERE server_id = :server_id\nAND channel_id = :channel_id","loc":{"a":397,"b":491,"line":18,"col":0}}};
+const getPollsInChannelIR: any = {"usedParamSet":{"server_id":true,"channel_id":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":56,"b":65}]},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":84,"b":94}]}],"statement":"SELECT id,name,react_emoji\nFROM polls\nWHERE server_id = :server_id\nAND channel_id = :channel_id"};
 
 /**
  * Query generated from SQL:
@@ -126,17 +126,17 @@ export const getPollsInChannel = new PreparedQuery<IGetPollsInChannelParams,IGet
 
 /** 'GetPoll' parameters type */
 export interface IGetPollParams {
-  server_id: string | null | void;
   channel_id: string | null | void;
   name: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'GetPoll' return type */
 export interface IGetPollResult {
-  poll_id: string;
-  name: string;
-  react_emoji: string;
   message_id: string;
+  name: string;
+  poll_id: string;
+  react_emoji: string;
 }
 
 /** 'GetPoll' query type */
@@ -145,7 +145,7 @@ export interface IGetPollQuery {
   result: IGetPollResult;
 }
 
-const getPollIR: any = {"name":"get_poll","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":683,"b":691,"line":32,"col":19}]}},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":711,"b":720,"line":33,"col":18}]}},{"name":"name","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":734,"b":737,"line":34,"col":12}]}}],"usedParamSet":{"server_id":true,"channel_id":true,"name":true},"statement":{"body":"SELECT\n\tpolls.id as poll_id,\n\tname,\n\treact_emoji,\n\tpoll_messages.message_id\nFROM polls\nINNER JOIN poll_messages\nON poll_messages.poll_id = polls.id\nWHERE server_id = :server_id\nAND channel_id = :channel_id\nAND name = :name","loc":{"a":516,"b":737,"line":24,"col":0}}};
+const getPollIR: any = {"usedParamSet":{"server_id":true,"channel_id":true,"name":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":166,"b":175}]},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":194,"b":204}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":217,"b":221}]}],"statement":"SELECT\n\tpolls.id as poll_id,\n\tname,\n\treact_emoji,\n\tpoll_messages.message_id\nFROM polls\nINNER JOIN poll_messages\nON poll_messages.poll_id = polls.id\nWHERE server_id = :server_id\nAND channel_id = :channel_id\nAND name = :name"};
 
 /**
  * Query generated from SQL:
@@ -180,7 +180,7 @@ export interface IDeletePollQuery {
   result: IDeletePollResult;
 }
 
-const deletePollIR: any = {"name":"delete_poll","params":[{"name":"poll_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":795,"b":801,"line":39,"col":12}]}}],"usedParamSet":{"poll_id":true},"statement":{"body":"DELETE\nFROM polls\nWHERE id = :poll_id","loc":{"a":765,"b":801,"line":37,"col":0}}};
+const deletePollIR: any = {"usedParamSet":{"poll_id":true},"params":[{"name":"poll_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":29,"b":36}]}],"statement":"DELETE\nFROM polls\nWHERE id = :poll_id"};
 
 /**
  * Query generated from SQL:
@@ -195,9 +195,9 @@ export const deletePoll = new PreparedQuery<IDeletePollParams,IDeletePollResult>
 
 /** 'GetReactEmoji' parameters type */
 export interface IGetReactEmojiParams {
-  server_id: string | null | void;
   channel_id: string | null | void;
   name: string | null | void;
+  server_id: string | null | void;
 }
 
 /** 'GetReactEmoji' return type */
@@ -211,7 +211,7 @@ export interface IGetReactEmojiQuery {
   result: IGetReactEmojiResult;
 }
 
-const getReactEmojiIR: any = {"name":"get_react_emoji","params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":882,"b":890,"line":44,"col":19}]}},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":910,"b":919,"line":45,"col":18}]}},{"name":"name","required":false,"transform":{"type":"scalar"},"codeRefs":{"used":[{"a":933,"b":936,"line":46,"col":12}]}}],"usedParamSet":{"server_id":true,"channel_id":true,"name":true},"statement":{"body":"SELECT react_emoji\nFROM polls\nWHERE server_id = :server_id\nAND channel_id = :channel_id\nAND name = :name","loc":{"a":833,"b":936,"line":42,"col":0}}};
+const getReactEmojiIR: any = {"usedParamSet":{"server_id":true,"channel_id":true,"name":true},"params":[{"name":"server_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":48,"b":57}]},{"name":"channel_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":76,"b":86}]},{"name":"name","required":false,"transform":{"type":"scalar"},"locs":[{"a":99,"b":103}]}],"statement":"SELECT react_emoji\nFROM polls\nWHERE server_id = :server_id\nAND channel_id = :channel_id\nAND name = :name"};
 
 /**
  * Query generated from SQL:

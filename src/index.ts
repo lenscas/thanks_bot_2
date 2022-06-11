@@ -10,7 +10,7 @@ import { enableGhostPingDetection } from './ghostPingDetection';
 import { dealWithPossibleSubmission } from './hiddenSubmissionTrigger';
 import { getCommandToRun } from './queries.queries';
 import { checkSpam } from './protection/spam';
-import { checkScam } from './protection/scam';
+import { loadCheckScam } from './protection/scam';
 import { setMutesAgain } from './commands/moderators/mute';
 
 const client = new Client({
@@ -22,6 +22,7 @@ const client = new Client({
     const db = new PoolWrapper(db_config.dev);
     await setMutesAgain(db, client);
     await FillServersWithoutCommands(db);
+    const checkScam = await loadCheckScam();
     client.on('message', async (message) => {
         try {
             if (await checkSpam(message)) {

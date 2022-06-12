@@ -4,7 +4,7 @@ import {
     Command,
     find_something,
     create_limit_to_command_channel_check,
-    CommandParams,
+    TextCommandParams,
     isServerInDisableList,
 } from './command';
 import { checkIfCommandExists } from './commands/moderators/queries.queries';
@@ -19,7 +19,7 @@ If you want more information about a specific command, just pass the command as 
 
 const check_command_channel = create_limit_to_command_channel_check();
 export async function help(
-    params: CommandParams,
+    params: TextCommandParams,
     commandTree: CommandTree,
     db: PoolWrapper,
     server_id?: string,

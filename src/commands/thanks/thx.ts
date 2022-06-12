@@ -1,66 +1,142 @@
-import { create_command, CommandParams } from '../../command';
+import { create_command } from '../../command';
 import { getCooldownTimeForThanking, checkIfUserThanked, insertHavingThanked, insertThanks } from './queries.queries';
 import { match } from 'typescript-pattern-matching';
+import { PoolWrapper } from '../../db';
+import { Client, User } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+
+type CommandReturn =
+    | {
+          success: false;
+          error: string;
+      }
+    | {
+          success: true;
+          message: string;
+      };
+
+const commandFunc = async (
+    db: PoolWrapper,
+    users_to_thank: Array<User>,
+    guild: string,
+    client: Client,
+    thanker: User,
+): Promise<CommandReturn> => {
+    const ids = users_to_thank.map((v) => v.id);
+    if (ids.length == 0) {
+        return {
+            success: false,
+            error: 'Missing people to thank. When using text commands, mention them.',
+        };
+    }
+    const res = await writeToDB({ db, server_id: guild, client, thanker: thanker, to_thank: users_to_thank });
+    return match({ thanked_count: ids.length, ...res })
+        .with({ thanked_count: 1, thankedSelf: true }, () => ({
+            success: false,
+            error: 'To keep it fair, you can not thank yourself.',
+        }))
+        .with({ thanked_count: 1, containsToRecent: true }, () => ({
+            success: false,
+            error: 'Sorry, you already thanked this user not so long ago. Wait a minute before thanking him/her again',
+        }))
+        .with({ thanked_count: 1, thankedMe: true }, () => ({
+            success: true,
+            message: 'Thank you! I just do my best! :)',
+        }))
+        .with({ thanked_count: 1 }, () => ({
+            success: true,
+            message: 'Thank you for letting me know that this person helped you out.',
+        }))
+        .with({ thanked_count: 2, thankedSelf: true, containsToRecent: true }, () => ({
+            success: false,
+            error: "Sorry, but you can't thank yourself and you already recently thanked the other person",
+        }))
+        .otherwise(() => {
+            let base = 'Thanks for informing me that these users helped you out!';
+            if (res.containsToRecent) {
+                base +=
+                    ' Your message contains users you already thanked. Wait a minute before thanking them again :).';
+            }
+            if (res.thankedSelf) {
+                base += " You can't thank yourself.";
+            }
+            return {
+                success: true,
+                message: base,
+            };
+        })
+        .run();
+};
 
 export const command = create_command(
     async (params) => {
         if (!params.message.guild) {
             return;
         }
-        const peopleBeingThanked = params.message.mentions.users;
-        const ids = peopleBeingThanked.map((_, id) => id);
-        if (ids.length == 0) {
-            await params.message.channel.send(
-                'Please ping the user in your thank message so I know who you are thanking.',
-            );
-            return;
-        }
-        const res = await writeToDB(params);
-        const returnMessage = match({ thanked_count: ids.length, ...res })
-            .with({ thanked_count: 1, thankedSelf: true }, () => 'To keep it fair, you can not thank yourself.')
-            .with(
-                { thanked_count: 1, containsToRecent: true },
-                () =>
-                    'Sorry, you already thanked this user not so long ago. Wait a minute before thanking him/her again',
-            )
-            .with({ thanked_count: 1, thankedMe: true }, () => 'Thank you! I just do my best! :)')
-            .with({ thanked_count: 1 }, () => 'Thank you for letting me know that this person helped you out.')
-            .with(
-                { thanked_count: 2, thankedSelf: true, containsToRecent: true },
-                () => "Sorry, but you can't thank yourself and you already recently thanked the other person",
-            )
-            .otherwise(() => {
-                let base = 'Thanks for informing me that these users helped you out!';
-                if (res.containsToRecent) {
-                    base +=
-                        ' Your message contains users you already thanked. Wait a minute before thanking them again :).';
-                }
-                if (res.thankedSelf) {
-                    base += " You can't thank yourself.";
-                }
-                return base;
-            })
-            .run();
-        await params.message.channel.send(returnMessage);
+        const peopleBeingThanked = params.message.mentions.users.map((x) => x);
+        const res = await commandFunc(
+            params.db,
+            peopleBeingThanked,
+            params.message.guild.id,
+            params.client,
+            params.message.author,
+        );
+        return res.success ? res.message : res.error;
     },
     'Lets me know that someone helped you out or was awesome in another way.',
     ['thanks', 'thank', 'ty'],
     async ({ message }) => !!message.guild,
+    undefined,
+    {
+        config: new SlashCommandBuilder()
+            .setDescription('Lets me know that someone helped you out or was awesome in another way.')
+            .setName('thank')
+            .addUserOption((x) => x.setDescription('User you want to thank').setName('member').setRequired(true))
+            .toJSON(),
+        func: async (params) => {
+            if (!params.interaction.guild) {
+                return 'This slash command only works for guilds.';
+            }
+            const res = await commandFunc(
+                params.db,
+                [params.interaction.options.getUser('member', true)],
+                params.interaction.guild.id,
+                params.client,
+                params.interaction.user,
+            );
+            if (res.success) {
+                return { content: res.message, ephemeral: false };
+            } else {
+                return { content: res.error, ephemeral: true };
+            }
+        },
+    },
 );
 
 const getUnixTimestamp = () => Math.floor(Date.now() / 1000);
-const writeToDB = (params: CommandParams) => {
-    const peopleBeingThanked = params.message.mentions.users;
-    return params.db.startTransaction(async (db) => {
+const writeToDB = ({
+    db,
+    server_id,
+    to_thank,
+    thanker,
+    client,
+}: {
+    db: PoolWrapper;
+    server_id: string;
+    to_thank: Array<User>;
+    thanker: User;
+    client: Client;
+}) => {
+    const peopleBeingThanked = to_thank;
+    return db.startTransaction(async (db) => {
         const time = await getCooldownTimeForThanking
-            .run({ server_id: params.message.guild?.id }, db)
+            .run({ server_id }, db)
             .then((x) => x[0]?.time_between_thanking ?? 1);
 
         const currentTime = BigInt(getUnixTimestamp());
         const time_since = (currentTime - BigInt(time)).toString();
 
-        const server_id = params.message.guild?.id;
-        const thanker_id = params.message.author.id;
+        const thanker_id = thanker.id;
 
         let containsToRecent = false;
         let thankedSelf = false;
@@ -85,7 +161,7 @@ const writeToDB = (params: CommandParams) => {
                             thankedSelf = true;
                             return false;
                         }
-                        if (x.user.id == params.client.user?.id) {
+                        if (x.user.id == client.user?.id) {
                             thankedMe = true;
                         }
                         return true;

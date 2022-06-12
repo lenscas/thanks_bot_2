@@ -1,4 +1,5 @@
-import { Client, Message } from 'discord.js';
+import { RESTPostAPIApplicationCommandsJSONBody } from 'discord-api-types/v10';
+import { Client, CommandInteraction, InteractionReplyOptions, Message, MessagePayload } from 'discord.js';
 import { readdir, lstat } from 'fs/promises';
 import path from 'path';
 import { PoolWrapper } from './db';
@@ -6,10 +7,15 @@ import { getCommandChannel, enableCommands, disableCommands, getServersWithoutCo
 
 export type CommandParams = {
     client: Client;
-    message: Message;
-    args: string[];
     db: PoolWrapper;
 };
+
+export type TextCommandParams = {
+    message: Message;
+    args: string[];
+} & CommandParams;
+
+export type SlashCommandParams = { interaction: CommandInteraction } & CommandParams;
 
 const serverIdsWithoutCommands = new Set<string>();
 
@@ -51,8 +57,12 @@ export function create_limit_to_command_channel_check(check?: Command['check']):
 export type Command = {
     aliases: string[];
     help_text: string;
-    check: (params: CommandParams) => Promise<boolean>;
-    run: (params: CommandParams) => Promise<void | string>;
+    check: (params: TextCommandParams) => Promise<boolean>;
+    run: (params: TextCommandParams) => Promise<void | string>;
+    slash_command?: {
+        config: RESTPostAPIApplicationCommandsJSONBody;
+        func: (params: SlashCommandParams) => Promise<void | string | InteractionReplyOptions | MessagePayload>;
+    };
 };
 
 export function create_command(
@@ -61,6 +71,7 @@ export function create_command(
     aliases?: Command['aliases'],
     check?: Command['check'],
     overwriteNoCommands = false,
+    slash_command?: Command['slash_command'],
 ): Command {
     if (!overwriteNoCommands) {
         const oldCheck = check;
@@ -76,6 +87,7 @@ export function create_command(
         help_text,
         aliases: aliases ?? [],
         check: check ?? (async () => true),
+        slash_command,
     };
 }
 
@@ -84,8 +96,9 @@ export function create_command_for_command_channel(
     help_text: Command['help_text'],
     aliases?: Command['aliases'],
     check?: Command['check'],
+    slash_command?: Command['slash_command'],
 ): Command {
-    return create_command(run, help_text, aliases, create_limit_to_command_channel_check(check));
+    return create_command(run, help_text, aliases, create_limit_to_command_channel_check(check), false, slash_command);
 }
 
 export function create_moderator_command(
@@ -93,6 +106,7 @@ export function create_moderator_command(
     help_text: Command['help_text'],
     aliases?: Command['aliases'],
     check?: Command['check'],
+    slash_command?: Command['slash_command'],
 ): Command {
     return create_command(
         run,
@@ -112,10 +126,15 @@ export function create_moderator_command(
             return check ? await check(params) : true;
         },
         true,
+        slash_command,
     );
 }
+export type CommandWithName = {
+    name: string;
+    command: Command;
+};
 
-export type CommandTree = { group: string; commands: Array<{ name: string; command: Command } | CommandTree> };
+export type CommandTree = { group: string; commands: Array<CommandWithName | CommandTree> };
 
 export async function get_commands_in(dir: string, group = ''): Promise<CommandTree> {
     const files = await readdir(dir);
@@ -163,14 +182,17 @@ export async function get_commands_in(dir: string, group = ''): Promise<CommandT
     };
 }
 
-export function find_command(command: string, tree: CommandTree): Command | undefined {
+export function find_command(command: string, tree: CommandTree, is_slash_command?: boolean): Command | undefined {
+    is_slash_command = is_slash_command ?? false;
     for (const candidate of tree.commands) {
         if ('name' in candidate) {
             if (candidate.name == command || candidate.command.aliases.some((alias) => command == alias)) {
-                return candidate.command;
+                if (!is_slash_command || candidate.command.slash_command) {
+                    return candidate.command;
+                }
             }
         } else {
-            const found = find_command(command, candidate);
+            const found = find_command(command, candidate, is_slash_command);
             if (found) {
                 return found;
             }
@@ -198,8 +220,6 @@ export function find_something(command: string, tree: CommandTree): Command | Co
 }
 
 export function drill_until_found_something(needles: string[], tree: CommandTree): CommandTree | Command | undefined {
-    console.log(tree);
-    console.log(needles);
     let working_with = tree;
     for (const needle of needles) {
         let found = false;
@@ -222,4 +242,19 @@ export function drill_until_found_something(needles: string[], tree: CommandTree
         }
     }
     return working_with;
+}
+
+export function find_every_slash_command(tree: CommandTree): CommandWithName[] {
+    let results: Array<CommandWithName> = [];
+    for (const candidate of tree.commands) {
+        if ('name' in candidate) {
+            if (candidate.command.slash_command) {
+                results.push(candidate);
+            }
+        } else {
+            const result = find_every_slash_command(candidate);
+            results = results.concat(result);
+        }
+    }
+    return results;
 }

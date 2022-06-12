@@ -1,3 +1,4 @@
+import { Guild } from 'discord.js';
 import {
     CommandTree,
     drill_until_found_something,
@@ -6,6 +7,7 @@ import {
     create_limit_to_command_channel_check,
     TextCommandParams,
     isServerInDisableList,
+    SlashCommandParams,
 } from './command';
 import { checkIfCommandExists } from './commands/moderators/queries.queries';
 import { PoolWrapper } from './db';
@@ -18,12 +20,59 @@ Did you recently get help and want to show your appreciation? Use the !thx comma
 If you want more information about a specific command, just pass the command as argument (!help thx).\n";
 
 const check_command_channel = create_limit_to_command_channel_check();
-export async function help(
-    params: TextCommandParams,
-    commandTree: CommandTree,
+export async function getHelpText(
+    guild: Guild,
     db: PoolWrapper,
-    server_id?: string,
-): Promise<void> {
+    commandTree: CommandTree,
+    command: Array<string> | undefined,
+): Promise<string> {
+    if (!command) {
+        const custom_commands = await getCustomCommands(guild.id, db).then(
+            (custom_commands) =>
+                'CustomCommands: ' +
+                [custom_commands[0], custom_commands[1], custom_commands[2], custom_commands[4]]
+                    .map((v) => '`' + v + '`')
+                    .join(','),
+        );
+        return [start_message].concat(render_group(commandTree).concat(custom_commands)).join('\n');
+    }
+    let found_something: string[] | Command | CommandTree | undefined;
+    if (command.length == 1 && guild.id && command[0] == 'CustomCommands') {
+        found_something = await getCustomCommands(guild.id, db);
+    } else {
+        found_something =
+            command.length == 1
+                ? find_something(command[0], commandTree)
+                : drill_until_found_something(command, commandTree);
+    }
+    if (!found_something) {
+        if (guild.id) {
+            const doesNameExist =
+                (await checkIfCommandExists.run({ name: command[0], server_id: guild.id }, db))[0].count != '0';
+            console.log(doesNameExist);
+            if (doesNameExist) {
+                found_something = {
+                    aliases: [],
+                    check: async () => true,
+                    help_text: 'This is a custom command. It has no input and will always produce the same output.',
+                    // eslint-disable-next-line @typescript-eslint/no-empty-function
+                    run: async () => {},
+                };
+            }
+        }
+    }
+    if (!found_something) {
+        return 'Could not find that group/command';
+    } else if ('run' in found_something) {
+        return found_something.help_text;
+    } else if (Array.isArray(found_something)) {
+        return ['**Commands**'].concat(found_something.map((v) => '`' + v + '`')).join('\n');
+    } else {
+        return render_group(found_something).join('\n');
+    }
+}
+
+export async function help_through_message(params: TextCommandParams, commandTree: CommandTree): Promise<void> {
     if (!params.message.guild) {
         return;
     }
@@ -33,60 +82,20 @@ export async function help(
     if (!(await check_command_channel(params))) {
         return;
     }
-    const { message, args } = params;
-    if (args.length == 0) {
-        let custom_commands = '';
-        if (server_id) {
-            custom_commands = await getCustomCommands(server_id, db).then(
-                (custom_commands) =>
-                    'CustomCommands: ' +
-                    [custom_commands[0], custom_commands[1], custom_commands[2], custom_commands[4]]
-                        .map((v) => '`' + v + '`')
-                        .join(','),
-            );
-        }
-        await message.channel.send(
-            [start_message].concat(render_group(commandTree).concat(custom_commands)).join('\n'),
-        );
-    } else {
-        let found_something: string[] | Command | CommandTree | undefined;
-        if (args.length == 1 && server_id && args[0] == 'CustomCommands') {
-            found_something = await getCustomCommands(server_id, db);
-        } else {
-            found_something =
-                args.length == 1
-                    ? find_something(args[0], commandTree)
-                    : drill_until_found_something(args, commandTree);
-        }
-        if (!found_something) {
-            if (server_id) {
-                const doesNameExist =
-                    (await checkIfCommandExists.run({ name: args[0], server_id: server_id }, db))[0].count != '0';
-                console.log(doesNameExist);
-                if (doesNameExist) {
-                    found_something = {
-                        aliases: [],
-                        check: async () => true,
-                        help_text: 'This is a custom command. It has no input and will always produce the same output.',
-                        // eslint-disable-next-line @typescript-eslint/no-empty-function
-                        run: async () => {},
-                    };
-                }
-            }
-        }
-        if (!found_something) {
-            await message.channel.send('Could not find that group/command');
-            return;
-        }
-        if ('run' in found_something) {
-            await message.channel.send(found_something.help_text);
-        } else if (Array.isArray(found_something)) {
-            await message.channel.send(['**Commands**'].concat(found_something.map((v) => '`' + v + '`')).join('\n'));
-        } else {
-            await message.channel.send(render_group(found_something).join('\n'));
-        }
-    }
+    await params.message.reply(await getHelpText(params.message.guild, params.db, commandTree, params.args));
 }
+export async function help_through_slash(params: SlashCommandParams, commandTree: CommandTree): Promise<void> {
+    if (!params.interaction.guild) {
+        return;
+    }
+    const res = params.interaction.options.getString('search');
+    const toSearchFor = res ? [res] : undefined;
+    await params.interaction.reply({
+        ephemeral: true,
+        content: await getHelpText(params.interaction.guild, params.db, commandTree, toSearchFor),
+    });
+}
+
 export function render_group(commandTree: CommandTree): string[] {
     const commands: Array<string> = [];
     const groups: Array<string> = [];

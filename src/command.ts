@@ -1,10 +1,18 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { RESTPostAPIApplicationCommandsJSONBody, Routes } from 'discord-api-types/v10';
-import { Client, CommandInteraction, InteractionReplyOptions, Message, MessagePayload } from 'discord.js';
+import {
+    Client,
+    CommandInteraction,
+    InteractionReplyOptions,
+    Message,
+    MessagePayload,
+    Modal,
+    ModalSubmitInteraction,
+} from 'discord.js';
 import { readdir, lstat } from 'fs/promises';
 import path from 'path';
-import { PoolWrapper } from './db';
+import { IDB, PoolWrapper } from './db';
 import {
     getCommandChannel,
     enableCommands,
@@ -25,6 +33,7 @@ export type TextCommandParams = {
 } & CommandParams;
 
 export type SlashCommandParams = { interaction: CommandInteraction } & CommandParams;
+export type ModalSubmitParams = { interaction: ModalSubmitInteraction } & CommandParams;
 
 const serverIdsWithoutCommands = new Set<string>();
 
@@ -63,6 +72,12 @@ export function create_limit_to_command_channel_check(check?: Command['check']):
     };
 }
 
+export type CommandModal = {
+    modal_name: string;
+    modal_builder: (_: Modal) => Modal;
+    modal_handler: (_: ModalSubmitParams) => Promise<void | string | InteractionReplyOptions | MessagePayload>;
+};
+
 export type Command = {
     aliases: string[];
     help_text: string;
@@ -72,10 +87,14 @@ export type Command = {
         config: (
             x: SlashCommandBuilder,
             guild_id: string,
-            db: PoolWrapper,
+            db: IDB,
         ) => RESTPostAPIApplicationCommandsJSONBody | Promise<RESTPostAPIApplicationCommandsJSONBody>;
-        func: (params: SlashCommandParams) => Promise<void | string | InteractionReplyOptions | MessagePayload>;
-    };
+    } & (
+        | {
+              func: (params: SlashCommandParams) => Promise<void | string | InteractionReplyOptions | MessagePayload>;
+          }
+        | CommandModal
+    );
 };
 
 export function create_command(
@@ -195,26 +214,42 @@ export async function get_commands_in(dir: string, group = ''): Promise<CommandT
     };
 }
 
-export function find_command(command: string, tree: CommandTree, is_slash_command?: boolean): Command | undefined {
-    is_slash_command = is_slash_command ?? false;
+export function find_command_with(tree: CommandTree, filter: (_: CommandWithName) => boolean): Command | undefined {
     for (const candidate of tree.commands) {
         if ('name' in candidate) {
-            if (
-                candidate.name == command ||
-                (is_slash_command && candidate.name.toLowerCase() == command) ||
-                candidate.command.aliases.some((alias) => command == alias)
-            ) {
-                if (!is_slash_command || candidate.command.slash_command) {
-                    return candidate.command;
-                }
+            if (filter(candidate)) {
+                return candidate.command;
             }
         } else {
-            const found = find_command(command, candidate, is_slash_command);
+            const found = find_command_with(candidate, filter);
             if (found) {
                 return found;
             }
         }
     }
+}
+
+export function find_command(command: string, tree: CommandTree, is_slash_command?: boolean): Command | undefined {
+    return find_command_with(
+        tree,
+        (candidate) =>
+            candidate.name == command ||
+            (is_slash_command && candidate.name.toLowerCase() == command) ||
+            candidate.command.aliases.some((alias) => command == alias),
+    );
+}
+
+export function find_modal_handler(modal_id: string, tree: CommandTree): CommandModal {
+    const a = find_command_with(
+        tree,
+        (candidate) =>
+            ('slash_command' in candidate.command &&
+                candidate.command.slash_command &&
+                'modal_name' in candidate.command.slash_command &&
+                candidate.command.slash_command.modal_name == modal_id) ||
+            false,
+    );
+    return a?.slash_command as CommandModal;
 }
 
 export function find_something(command: string, tree: CommandTree): Command | CommandTree | undefined {
@@ -265,7 +300,7 @@ export type SlashCommandConfig = RESTPostAPIApplicationCommandsJSONBody;
 export async function find_every_slash_command_config(
     tree: CommandTree,
     guild_id: string,
-    db: PoolWrapper,
+    db: IDB,
 ): Promise<Array<SlashCommandConfig>> {
     let results: Array<SlashCommandConfig> = [];
     for (const candidate of tree.commands) {
@@ -284,18 +319,24 @@ export async function find_every_slash_command_config(
     return results;
 }
 
-async function getSlashCommandsFromCustomCommands(db: PoolWrapper, guild: string) {
+async function getSlashCommandsFromCustomCommands(db: IDB, guild: string) {
     const commandNames = await getEveryCustomCommandName.run({ server_id: guild }, db);
     return commandNames.map((x) => new SlashCommandBuilder().setName(x.name).setDescription(x.name).toJSON());
 }
 
-export async function register_commands_for(client: Client, guild: string, rest: REST, db: PoolWrapper): Promise<void> {
+export async function register_commands_for(client: Client, guild: string, rest: REST, db: IDB): Promise<void> {
     const foundCommands = await get_commands_in(path.join(__dirname, 'commands'));
     const [customCommands, slashCommands] = await Promise.all([
         getSlashCommandsFromCustomCommands(db, guild),
         find_every_slash_command_config(foundCommands, guild, db),
     ]);
-    const commands = customCommands.concat(slashCommands);
+    const commands = customCommands.concat(slashCommands).concat(
+        new SlashCommandBuilder()
+            .setName('help')
+            .setDescription('shows help text')
+            .addStringOption((x) => x.setName('search').setDescription('What command/group to search for'))
+            .toJSON(),
+    );
     if (!client.user) {
         throw new Error('No user for the given client. Maybe not logged in?');
     }

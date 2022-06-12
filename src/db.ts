@@ -1,6 +1,18 @@
 import { Pool, PoolClient, PoolConfig } from 'pg';
 
-export class ClientWrapper {
+export interface IDB {
+    query: (
+        query: string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        bindings: any[],
+    ) => Promise<{
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        rows: any[];
+    }>;
+    startTransaction: <T>(func: (client: ClientWrapper) => Promise<T>) => Promise<T>;
+}
+
+export class ClientWrapper implements IDB {
     onTransactionError: 'rollback' | 'commit' = 'rollback';
     onTransactionSuccess: 'rollback' | 'commit' = 'commit';
     client: PoolClient;
@@ -38,7 +50,7 @@ export class ClientWrapper {
     };
 }
 
-export class PoolWrapper extends Pool {
+export class PoolWrapper extends Pool implements IDB {
     constructor(config: PoolConfig) {
         super(config);
     }

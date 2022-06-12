@@ -134,20 +134,22 @@ export const loadCheckScam = async (): Promise<
                 return true;
             }
 
-            const success = await muteAndReportUser(
-                message.member,
-                message.guild,
-                db,
-                [
-                    {
-                        authorId: message.member?.id,
-                        date: message.createdAt,
-                        authorName: message.author.username,
-                        content: message.content,
-                    },
-                ],
-                'possible scam',
-            );
+            const success = (
+                await muteAndReportUser(
+                    message.member,
+                    message.guild,
+                    db,
+                    [
+                        {
+                            authorId: message.member?.id,
+                            date: message.createdAt,
+                            authorName: message.author.username,
+                            content: message.content,
+                        },
+                    ],
+                    'possible scam',
+                )
+            )[0];
             try {
                 message.member.send(
                     'You have sent too many messages with suspicious links and have been automatically muted to prevent further incidents.\nPlease contact a moderator.',

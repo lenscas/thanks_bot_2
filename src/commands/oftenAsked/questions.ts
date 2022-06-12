@@ -1,8 +1,6 @@
 import { create_command } from '../../command';
 
-export const command = create_command(
-    async ({ message }) => {
-        await message.channel.send(`**We want to help you with your issue, so help us help you.**
+const message = `**We want to help you with your issue, so help us help you.**
 **__Before Asking__**
 Make sure you have tried using google to find an answer to your question and let us know what you tried.
 **__Asking Your Question__**
@@ -16,8 +14,16 @@ Describe the symptoms, not your guesses.
 Describe your goal, the problem might be somewhere other than where you think it is.
 Courtesy never hurts and sometimes helps
 **__After you get helped__**
-If your issue is fixed, let everyone know that it is solved.`);
-    },
+If your issue is fixed, let everyone know that it is solved.`;
+
+export const command = create_command(
+    async () => message,
     'Explains how to ask good questions',
     ['ask', 'questions'],
+    undefined,
+    undefined,
+    {
+        config: (x) => x.toJSON(),
+        func: async () => ({ ephemeral: false, content: message }),
+    },
 );

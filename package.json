@@ -19,11 +19,14 @@
     "test": "yarn lint && yarn unitTest"
   },
   "dependencies": {
+    "@discordjs/builders": "^0.15.0",
+    "@discordjs/rest": "^0.5.0",
     "@pgtyped/query": "^1",
     "@types/fast-levenshtein": "^0.0.2",
     "@types/node": "^14.14.13",
     "axios": "^0.21.0",
     "cli-table3": "^0.6.0",
+    "discord-api-types": "^0.33.5",
     "discord.js": "^13",
     "fast-levenshtein": "^3.0.0",
     "get-urls": "^11.0.0",

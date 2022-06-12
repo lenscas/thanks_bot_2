@@ -20,10 +20,10 @@ export const muteAndReportUser = async (
     db: PoolWrapper,
     messagesToLog: LogMessage[],
     reason: string,
-): Promise<boolean> => {
+): Promise<[false] | [false, string] | [true, string]> => {
     const config = await getProtectionConfig.run({ server_id: server.id }, db).then((v) => v[0]);
     if (!(config && config.channel_report_mutes && config.mute_role && config.muted_marker_role)) {
-        return false;
+        return [false];
     }
     await Promise.all([member.roles.add(config.mute_role, reason), member.roles.add(config.muted_marker_role, reason)]);
     const asBuffer = messagesToFile(messagesToLog);
@@ -32,14 +32,14 @@ export const muteAndReportUser = async (
 
     const channel = server.channels.cache.find((x) => x.id == config.channel_report_mutes);
     if (!channel) {
-        return false;
+        return [false, config.mute_role];
     }
     if (!channel.isText()) {
-        return false;
+        return [false, config.mute_role];
     }
     await channel.send({
         content: `${member.user.username} ${member.nickname} <@${member.id}>`,
         files: [attachment],
     });
-    return true;
+    return [true, config.mute_role];
 };

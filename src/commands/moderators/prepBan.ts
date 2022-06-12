@@ -2,7 +2,8 @@ import { create_moderator_command } from '../../command';
 import { Guild, GuildMember, Message } from 'discord.js';
 import { PermissionFlagsBits } from 'discord-api-types/v10';
 import { PoolWrapper } from '../../db';
-import { LogMessage, muteAndReportUser } from '../../protection/helpers';
+import { muteAndReportUser } from '../../protection/helpers';
+import { getMessagesToLog } from './_base';
 
 const commandFUnc = async (
     amount: number,
@@ -11,13 +12,8 @@ const commandFUnc = async (
     user: GuildMember,
     channel: Message['channel'],
 ) => {
-    const messages: Array<LogMessage> = (await channel.messages.fetch({ limit: amount })).map((x) => ({
-        authorId: x.author.id,
-        authorName: x.author.username,
-        content: x.content,
-        date: x.createdAt,
-    }));
-    return await muteAndReportUser(user, guild, db, messages, 'Prepared ban command executed');
+    const messages = await getMessagesToLog(channel, amount);
+    return (await muteAndReportUser(user, guild, db, messages, 'Prepared ban command executed'))[0];
 };
 
 const successText = 'muted and logged the messages';

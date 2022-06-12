@@ -1,5 +1,6 @@
-import { Client, Guild, GuildMember, Message, Role } from 'discord.js';
+import { Client, Guild, GuildMember, Message, Role, TextBasedChannel } from 'discord.js';
 import { PoolWrapper } from '../../db';
+import { LogMessage } from '../../protection/helpers';
 import { getMuteRole } from './queries.queries';
 
 export const getMutedRole = async (server: Guild, db: PoolWrapper): Promise<string | Role | null> => {
@@ -56,3 +57,11 @@ export const checkIfChannelIsText = async (client: Client, channelId: string): P
     }
     return true;
 };
+
+export const getMessagesToLog = async (channel: TextBasedChannel, amount: number): Promise<Array<LogMessage>> =>
+    (await channel.messages.fetch({ limit: amount })).map((x) => ({
+        authorId: x.author.id,
+        authorName: x.author.username,
+        content: x.content,
+        date: x.createdAt,
+    }));

@@ -1,4 +1,3 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, Message } from 'discord.js';
 import { create_command_for_command_channel } from '../../command';
 
@@ -28,13 +27,12 @@ const command1 = create_command_for_command_channel(
     ['lat', 'latency'],
     undefined,
     {
-        config: new SlashCommandBuilder()
-            .setName('ping')
-            .setDescription('Replies with your input!')
-            .addStringOption((option) =>
-                option.setName('input').setDescription('The input to echo back').setRequired(true),
-            )
-            .toJSON(),
+        config: (x) =>
+            x
+                .addStringOption((option) =>
+                    option.setName('input').setDescription('The input to echo back').setRequired(true),
+                )
+                .toJSON(),
         func: ({ interaction }) => func({ is_slash: true, trigger: interaction }),
     },
 );

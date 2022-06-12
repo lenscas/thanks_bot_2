@@ -2,13 +2,7 @@ import { Client, Intents } from 'discord.js';
 
 import db_config from '../database.json';
 import { commandPrefix, discordToken } from '../config.json';
-import {
-    get_commands_in,
-    find_command,
-    FillServersWithoutCommands,
-    CommandTree,
-    find_every_slash_command,
-} from './command';
+import { get_commands_in, find_command, FillServersWithoutCommands, register_commands_for } from './command';
 import path from 'path';
 import { help } from './help';
 import { PoolWrapper } from './db';
@@ -19,7 +13,6 @@ import { checkSpam } from './protection/spam';
 import { loadCheckScam } from './protection/scam';
 import { setMutesAgain } from './commands/moderators/mute';
 import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v10';
 
 const rest = new REST().setToken(discordToken);
 
@@ -34,13 +27,13 @@ const client = new Client({
     await FillServersWithoutCommands(db);
     await client.login(discordToken);
     await setMutesAgain(db, client);
-    await register_slash_commands(client, commands);
+    await register_slash_commands(client, db);
     client.on('interactionCreate', async (interaction) => {
         if (!interaction.isCommand()) return;
 
         const command = find_command(interaction.commandName, commands, true);
         if (command && command.slash_command) {
-            const res = await command.slash_command.func({ db, client, interaction });
+            const res = await command.slash_command.func({ db, client, interaction, rest });
             if (res) {
                 await interaction.reply(res);
             }
@@ -61,7 +54,7 @@ const client = new Client({
 
             const cmd = messageArray[0].replace(commandPrefix, '');
             const args = messageArray.slice(1);
-            const create_params = { args, client, db, message };
+            const create_params = { args, client, db, message, rest };
             if (cmd == 'help') {
                 await help(create_params, commands, db, message.guild?.id);
                 return;
@@ -91,19 +84,11 @@ const client = new Client({
     enableGhostPingDetection(client);
 })();
 
-async function register_slash_commands(client: Client, commands: CommandTree) {
-    const slash_commands = find_every_slash_command(commands).map((x) => {
-        return x.command.slash_command?.config;
-    });
+async function register_slash_commands(client: Client, db: PoolWrapper) {
     try {
-        if (!client.user) {
-            throw new Error('No user for the given client. Maybe not logged in?');
-        }
-        await rest.put(Routes.applicationGuildCommands(client.user?.id, '762689570848243712'), {
-            body: slash_commands,
-        });
+        await register_commands_for(client, '762689570848243712', rest, db);
     } catch (e) {
-        console.error('Error while registering slash commands');
-        console.error(e);
+        console.error('Could not register commands!');
+        throw e;
     }
 }

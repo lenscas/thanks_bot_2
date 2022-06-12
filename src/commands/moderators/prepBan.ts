@@ -1,6 +1,5 @@
 import { create_moderator_command } from '../../command';
 import { Guild, GuildMember, Message } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
 import { PermissionFlagsBits } from 'discord-api-types/v10';
 import { PoolWrapper } from '../../db';
 import { LogMessage, muteAndReportUser } from '../../protection/helpers';
@@ -48,21 +47,20 @@ export const command = create_moderator_command(
             return errorText;
         }
     },
-    'Prepares someone to get banned by muting them and by copying the given amount of messages to the log channel',
+    'mutes the given person and logs the X messages',
     ['ban', 'prep_ban', 'prepban'],
     undefined,
     {
-        config: new SlashCommandBuilder()
-            .setName('prep_ban')
-            .setDescription('mutes the given person and logs the X messages')
-            .addUserOption((x) =>
-                x.setDescription('User that needs to be prepared for a ban').setName('user').setRequired(true),
-            )
-            .addIntegerOption((x) =>
-                x.setName('amount_to_log').setDescription('Amount of messages to log').setRequired(true),
-            )
-            .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
-            .toJSON(),
+        config: (x) =>
+            x
+                .addUserOption((x) =>
+                    x.setDescription('User that needs to be prepared for a ban').setName('user').setRequired(true),
+                )
+                .addIntegerOption((x) =>
+                    x.setName('amount_to_log').setDescription('Amount of messages to log').setRequired(true),
+                )
+                .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+                .toJSON(),
         func: async ({ db, interaction }) => {
             if (!interaction.guild) {
                 return;

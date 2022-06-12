@@ -1,20 +1,14 @@
+import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
 import { create_moderator_command } from '../../../command';
+import { PoolWrapper } from '../../../db';
 import { checkIfChannelsAreAlreadyUsed, enableSubmissionChannel } from '../queries.queries';
 
-export const command = create_moderator_command(async ({ message, db }) => {
-    if (message.mentions.channels.size > 1) {
-        return 'You can only specify 1 channel that submissions are going to be stored in';
-    }
-    const channel = message.mentions.channels.first();
-    if (!channel) {
-        return 'You need to specify 1 channel that submissions are going to be stored in';
-    }
-
+const commandFunc = (from_channel_id: string, to_channel_id: string, guild_id: string, db: PoolWrapper) => {
     return db.startTransaction(async (db) => {
         const params = {
-            server_id: message.guild?.id,
-            from_channel: message.channel.id,
-            to_channel: channel.id,
+            server_id: guild_id,
+            from_channel: from_channel_id,
+            to_channel: to_channel_id,
         };
         const res = await checkIfChannelsAreAlreadyUsed
             .run(params, db)
@@ -32,4 +26,46 @@ export const command = create_moderator_command(async ({ message, db }) => {
         await enableSubmissionChannel.run(params, db);
         return 'The hidden submission is setup. Use !endSubmission in this channel to end it';
     });
-}, 'Enables a channel to receive hidden submissions. This means that every message will be automatically deleted and transported to the given channel.');
+};
+
+export const command = create_moderator_command(
+    async ({ message, db }) => {
+        if (!message.guild) {
+            return;
+        }
+        if (message.mentions.channels.size > 1) {
+            return 'You can only specify 1 channel that submissions are going to be stored in';
+        }
+        const channel = message.mentions.channels.first();
+        if (!channel) {
+            return 'You need to specify 1 channel that submissions are going to be stored in';
+        }
+        return await commandFunc(message.channel.id, channel.id, message.guild.id, db);
+    },
+    'Enables a channel to receive hidden submissions.',
+    undefined,
+    undefined,
+    {
+        config: (x) =>
+            x
+                .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+                .addChannelOption((x) =>
+                    x
+                        .setName('channel')
+                        .setDescription('Channel to move posts over to')
+                        .addChannelTypes(ChannelType.GuildText),
+                )
+                .toJSON(),
+        func: async ({ interaction, db }) => {
+            if (!interaction.guild) {
+                return;
+            }
+            const channelTo = interaction.options.getChannel('channel', true);
+            const channelFrom = interaction.channelId;
+            return {
+                ephemeral: true,
+                content: await commandFunc(channelFrom, channelTo.id, interaction.guild.id, db),
+            };
+        },
+    },
+);

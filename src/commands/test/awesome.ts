@@ -1,4 +1,3 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
 import { create_command_for_command_channel } from '../../command';
 
 const options = ['Nice!', 'AWESOME!', 'awesome!', 'nice!', 'GREAT!', 'amazing!', 'WOOO!'];
@@ -10,7 +9,7 @@ export const command = create_command_for_command_channel(
     [],
     undefined,
     {
-        config: new SlashCommandBuilder().setName('awesome').setDescription('This is a basic test command').toJSON(),
+        config: (x) => x.toJSON(),
         func: async () => ({
             content: commandFunc(),
             ephemeral: true,

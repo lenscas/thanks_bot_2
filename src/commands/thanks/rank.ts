@@ -1,4 +1,3 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
 import { Guild, User } from 'discord.js';
 import { create_command_for_command_channel } from '../../command';
 import { PoolWrapper } from '../../db';
@@ -21,17 +20,16 @@ export const command = create_command_for_command_channel(
         const user = message.mentions.users.first() ?? message.author;
         return await commandFunc(user, message.guild, db);
     },
-    'Shows how many times you got thanked and your current rank.\n It can also be used to get the rank of someone else.',
+    'Shows how many times someone got thanked and their current rank',
     [],
     undefined,
     {
-        config: new SlashCommandBuilder()
-            .setName('rank')
-            .setDescription('Shows how many times someone got thanked and their current rank')
-            .addUserOption((x) =>
-                x.setName('user').setDescription('User to check (Leave empty for yourself)').setRequired(false),
-            )
-            .toJSON(),
+        config: (x) =>
+            x
+                .addUserOption((x) =>
+                    x.setName('user').setDescription('User to check (Leave empty for yourself)').setRequired(false),
+                )
+                .toJSON(),
         func: async ({ db, interaction }) => {
             if (!interaction.guild) {
                 return;

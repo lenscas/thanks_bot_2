@@ -1,13 +1,22 @@
-import { RESTPostAPIApplicationCommandsJSONBody } from 'discord-api-types/v10';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { REST } from '@discordjs/rest';
+import { RESTPostAPIApplicationCommandsJSONBody, Routes } from 'discord-api-types/v10';
 import { Client, CommandInteraction, InteractionReplyOptions, Message, MessagePayload } from 'discord.js';
 import { readdir, lstat } from 'fs/promises';
 import path from 'path';
 import { PoolWrapper } from './db';
-import { getCommandChannel, enableCommands, disableCommands, getServersWithoutCommands } from './queries.queries';
+import {
+    getCommandChannel,
+    enableCommands,
+    disableCommands,
+    getServersWithoutCommands,
+    getEveryCustomCommandName,
+} from './queries.queries';
 
 export type CommandParams = {
     client: Client;
     db: PoolWrapper;
+    rest: REST;
 };
 
 export type TextCommandParams = {
@@ -60,7 +69,11 @@ export type Command = {
     check: (params: TextCommandParams) => Promise<boolean>;
     run: (params: TextCommandParams) => Promise<void | string>;
     slash_command?: {
-        config: RESTPostAPIApplicationCommandsJSONBody;
+        config: (
+            x: SlashCommandBuilder,
+            guild_id: string,
+            db: PoolWrapper,
+        ) => RESTPostAPIApplicationCommandsJSONBody | Promise<RESTPostAPIApplicationCommandsJSONBody>;
         func: (params: SlashCommandParams) => Promise<void | string | InteractionReplyOptions | MessagePayload>;
     };
 };
@@ -186,7 +199,11 @@ export function find_command(command: string, tree: CommandTree, is_slash_comman
     is_slash_command = is_slash_command ?? false;
     for (const candidate of tree.commands) {
         if ('name' in candidate) {
-            if (candidate.name == command || candidate.command.aliases.some((alias) => command == alias)) {
+            if (
+                candidate.name == command ||
+                (is_slash_command && candidate.name.toLowerCase() == command) ||
+                candidate.command.aliases.some((alias) => command == alias)
+            ) {
                 if (!is_slash_command || candidate.command.slash_command) {
                     return candidate.command;
                 }
@@ -204,7 +221,6 @@ export function find_something(command: string, tree: CommandTree): Command | Co
     for (const candidate of tree.commands) {
         console.log(candidate);
         if ('name' in candidate) {
-            console.log(candidate, command);
             if (candidate.name == command || candidate.command.aliases.some((alias) => command == alias)) {
                 return candidate.command;
             }
@@ -244,17 +260,47 @@ export function drill_until_found_something(needles: string[], tree: CommandTree
     return working_with;
 }
 
-export function find_every_slash_command(tree: CommandTree): CommandWithName[] {
-    let results: Array<CommandWithName> = [];
+export type SlashCommandConfig = RESTPostAPIApplicationCommandsJSONBody;
+
+export async function find_every_slash_command_config(
+    tree: CommandTree,
+    guild_id: string,
+    db: PoolWrapper,
+): Promise<Array<SlashCommandConfig>> {
+    let results: Array<SlashCommandConfig> = [];
     for (const candidate of tree.commands) {
         if ('name' in candidate) {
             if (candidate.command.slash_command) {
-                results.push(candidate);
+                const name = candidate.name.toLowerCase();
+                const description = candidate.command.help_text;
+                const builder = new SlashCommandBuilder().setName(name).setDescription(description);
+                results.push(await candidate.command.slash_command.config(builder, guild_id, db));
             }
         } else {
-            const result = find_every_slash_command(candidate);
+            const result = await find_every_slash_command_config(candidate, guild_id, db);
             results = results.concat(result);
         }
     }
     return results;
+}
+
+async function getSlashCommandsFromCustomCommands(db: PoolWrapper, guild: string) {
+    const commandNames = await getEveryCustomCommandName.run({ server_id: guild }, db);
+    return commandNames.map((x) => new SlashCommandBuilder().setName(x.name).setDescription(x.name).toJSON());
+}
+
+export async function register_commands_for(client: Client, guild: string, rest: REST, db: PoolWrapper): Promise<void> {
+    const foundCommands = await get_commands_in(path.join(__dirname, 'commands'));
+    const [customCommands, slashCommands] = await Promise.all([
+        getSlashCommandsFromCustomCommands(db, guild),
+        find_every_slash_command_config(foundCommands, guild, db),
+    ]);
+    const commands = customCommands.concat(slashCommands);
+    if (!client.user) {
+        throw new Error('No user for the given client. Maybe not logged in?');
+    }
+    //'762689570848243712'
+    await rest.put(Routes.applicationGuildCommands(client.user?.id, guild), {
+        body: commands,
+    });
 }

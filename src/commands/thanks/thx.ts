@@ -3,7 +3,6 @@ import { getCooldownTimeForThanking, checkIfUserThanked, insertHavingThanked, in
 import { match } from 'typescript-pattern-matching';
 import { PoolWrapper } from '../../db';
 import { Client, User } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
 
 type CommandReturn =
     | {
@@ -88,11 +87,10 @@ export const command = create_command(
     async ({ message }) => !!message.guild,
     undefined,
     {
-        config: new SlashCommandBuilder()
-            .setDescription('Lets me know that someone helped you out or was awesome in another way.')
-            .setName('thank')
-            .addUserOption((x) => x.setDescription('User you want to thank').setName('member').setRequired(true))
-            .toJSON(),
+        config: (x) =>
+            x
+                .addUserOption((x) => x.setDescription('User you want to thank').setName('member').setRequired(true))
+                .toJSON(),
         func: async (params) => {
             if (!params.interaction.guild) {
                 return 'This slash command only works for guilds.';

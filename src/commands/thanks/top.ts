@@ -3,7 +3,6 @@ import { top } from './queries.queries';
 import Table from 'cli-table3';
 import { PoolWrapper } from '../../db';
 import { Client, Guild } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
 
 const commandFunc = async (db: PoolWrapper, guild: Guild, client: Client) => {
     const res = await Promise.all(
@@ -43,10 +42,7 @@ export const command = create_command_for_command_channel(
     ['list'],
     undefined,
     {
-        config: new SlashCommandBuilder()
-            .setName('top')
-            .setDescription('Show the people who got thanked the most')
-            .toJSON(),
+        config: (x) => x.toJSON(),
         func: async ({ db, interaction, client }) => {
             if (!interaction.guild) {
                 return;

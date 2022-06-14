@@ -2,6 +2,8 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { RESTPostAPIApplicationCommandsJSONBody, Routes } from 'discord-api-types/v10';
 import {
+    ApplicationCommandOptionChoiceData,
+    AutocompleteInteraction,
     Client,
     CommandInteraction,
     InteractionReplyOptions,
@@ -33,6 +35,7 @@ export type TextCommandParams = {
 } & CommandParams;
 
 export type SlashCommandParams = { interaction: CommandInteraction } & CommandParams;
+export type AutoCompleteParams = { interaction: AutocompleteInteraction } & CommandParams;
 export type ModalSubmitParams = { interaction: ModalSubmitInteraction } & CommandParams;
 
 const serverIdsWithoutCommands = new Set<string>();
@@ -92,6 +95,7 @@ export type Command = {
     } & (
         | {
               func: (params: SlashCommandParams) => Promise<void | string | InteractionReplyOptions | MessagePayload>;
+              autoComplete?: (params: AutoCompleteParams) => Promise<ApplicationCommandOptionChoiceData[]>;
           }
         | CommandModal
     );

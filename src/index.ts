@@ -36,6 +36,17 @@ const client = new Client({
     await register_slash_commands(client, db);
     client.on('interactionCreate', async (interaction) => {
         try {
+            if (interaction.isAutocomplete()) {
+                const command = find_command(interaction.commandName, commands, true);
+                if (!command?.slash_command) {
+                    return;
+                }
+                if ('autoComplete' in command.slash_command && command.slash_command.autoComplete) {
+                    const res = await command.slash_command.autoComplete({ db, interaction, client, rest });
+                    interaction.respond(res);
+                }
+                return;
+            }
             if (interaction.isModalSubmit()) {
                 const command = find_modal_handler(interaction.customId, commands);
                 try {
@@ -83,7 +94,7 @@ const client = new Client({
             }
         } catch (e) {
             if (interaction.isRepliable()) {
-                await interaction.reply(`Something has gone wrong.\nError:\n {e}`);
+                await interaction.reply(`Something has gone wrong.\nError:\n ${e}`);
             }
         }
     });

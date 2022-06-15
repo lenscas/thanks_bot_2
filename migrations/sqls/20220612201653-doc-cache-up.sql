@@ -4,14 +4,14 @@ CREATE TABLE public.docs_for (
 	CONSTRAINT docs_for_pk PRIMARY KEY (id)
 );
 
-ALTER TABLE public.docs_for ALTER COLUMN last_time_crawled TYPE timestamp USING last_time_crawled::timestamp;
+ALTER TABLE public.docs_for ADD last_time_crawled timestamp NOT NULL;
 
 CREATE TABLE public.doc_cache_classes (
 	id serial NOT NULL,
 	for_site integer NOT NULL,
 	class_name varchar NOT NULL,
 	CONSTRAINT doc_cache_classes_pk PRIMARY KEY (id),
-	CONSTRAINT doc_cache_classes_un UNIQUE (for_site,class_name),
+	CONSTRAINT doc_cache_classes_un UNIQUE (for_site,class_name)
 );
 
 CREATE TABLE public.doc_cache_methods (

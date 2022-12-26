@@ -30,9 +30,9 @@
     "discord.js": "^13",
     "fast-levenshtein": "^3.0.0",
     "get-urls": "^11.0.0",
+    "node-html-parser": "^5.3.3",
     "pg": "^8.3.3",
-    "typescript-pattern-matching": "^1.0.1",
-    "node-html-parser": "^5.3.3"
+    "typescript-pattern-matching": "^1.0.1"
   },
   "devDependencies": {
     "@pgtyped/cli": "^1",

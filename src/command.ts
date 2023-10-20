@@ -8,6 +8,7 @@ import {
     CommandInteraction,
     InteractionReplyOptions,
     Message,
+    MessageOptions,
     MessagePayload,
     Modal,
     ModalSubmitInteraction,
@@ -85,7 +86,7 @@ export type Command = {
     aliases: string[];
     help_text: string;
     check: (params: TextCommandParams) => Promise<boolean>;
-    run: (params: TextCommandParams) => Promise<void | string>;
+    run: (params: TextCommandParams) => Promise<void | string | MessagePayload | MessageOptions>;
     slash_command?: {
         config: (
             x: SlashCommandBuilder,

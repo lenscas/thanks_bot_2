@@ -135,7 +135,7 @@ export const loadCheckScam = async (): Promise<
             }
 
             let content =
-                '***WARNING!***\nPossible scam link detected.\n' +
+                '***WANING!***\nPossible scam link detected.\n' +
                 message.member.toString() +
                 ' please refrain from sending links to this site. Next offense will result in automatic moderator action.';
             if (warnedStruct.reason == 'PingAndLinks') {

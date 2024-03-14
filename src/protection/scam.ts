@@ -135,12 +135,12 @@ export const loadCheckScam = async (): Promise<
             }
 
             let content =
-                '***WARNING!***\nPossible scam link detected.\n' +
+                '***WARNING!*** ⚠\nPossible scam link detected.\n' +
                 message.member.toString() +
                 ' please refrain from sending links to this site. Next offense will result in automatic moderator action.';
             if (warnedStruct.reason == 'PingAndLinks') {
                 content =
-                    '***WANING!***\nLinks inside messages that ping everyone/here are often scam messages.\nYes, this _especially_ includes discord server invites.\n\n' +
+                    '***WARNING! ⚠***\nLinks inside messages that ping everyone/here are often scam messages.\nYes, this _especially_ includes discord server invites.\n\n' +
                     message.member.toString() +
                     ', Please, do not send messages like this in the future or automatic moderating actions will be taken';
             }
